@@ -1,11 +1,11 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/models/test_models.dart';
-import 'package:final_project/modules/movieDetail/components/arrow_back.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
 import 'package:final_project/modules/movieDetail/components/trailer_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final Movie movie;
@@ -29,6 +29,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
           child: Stack(
         children: [
@@ -44,7 +46,6 @@ class _MovieDetailPageState extends State<MovieDetailPage>
               AppColors.darkBackground
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           ),
-          const ArrowBack(),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -160,6 +161,19 @@ class _MovieDetailPageState extends State<MovieDetailPage>
           ),
         ],
       )),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const FaIcon(FontAwesomeIcons.arrowLeft),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
     );
   }
 
