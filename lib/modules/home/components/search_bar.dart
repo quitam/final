@@ -43,14 +43,24 @@ class SearchBar extends StatelessWidget {
               ))
             ]),
           )),
-          Container(
-            margin: const EdgeInsets.only(left: 16),
-            width: size.height / 15,
-            height: size.height / 15,
-            decoration: BoxDecoration(
-                color: AppColors.blueMain,
-                borderRadius: BorderRadius.circular(14)),
-            child: Image.asset(AssetPath.iconControl),
+          GestureDetector(
+            onTap: () {
+              // ignore: avoid_print
+              print('click');
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 16),
+              alignment: Alignment.center,
+              width: size.height / 15,
+              height: size.height / 15,
+              decoration: BoxDecoration(
+                  color: AppColors.blueMain,
+                  borderRadius: BorderRadius.circular(14)),
+              child: const FaIcon(
+                FontAwesomeIcons.sliders,
+                color: AppColors.white,
+              ),
+            ),
           )
         ]),
       ),
