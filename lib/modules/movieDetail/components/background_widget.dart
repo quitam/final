@@ -1,11 +1,13 @@
 import 'package:final_project/config/themes/app_colors.dart';
-import 'package:final_project/constants/asset_path.dart';
+import 'package:final_project/models/test_models.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundWidget extends StatelessWidget {
+  final Movie movie;
   const BackgroundWidget({
     super.key,
     required this.size,
+    required this.movie,
   });
 
   final Size size;
@@ -14,17 +16,19 @@ class BackgroundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-            height: size.height / 3.5,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(AssetPath.teaserTrailer)),
-              gradient: LinearGradient(colors: [
-                AppColors.darkerBackground,
-                AppColors.darkBackground
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-            )),
+        Hero(
+          tag: movie.banner,
+          child: Container(
+              height: size.height / 3.5,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover, image: AssetImage(movie.banner)),
+                gradient: const LinearGradient(colors: [
+                  AppColors.darkerBackground,
+                  AppColors.darkBackground
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              )),
+        ),
         Container(
           height: 200,
           decoration: const BoxDecoration(

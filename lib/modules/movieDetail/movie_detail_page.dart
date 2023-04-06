@@ -1,13 +1,15 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/constants/asset_path.dart';
+import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/components/arrow_back.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
+import 'package:final_project/modules/movieDetail/components/trailer_bar.dart';
 import 'package:flutter/material.dart';
 
 class MovieDetailPage extends StatefulWidget {
-  const MovieDetailPage({super.key});
+  final Movie movie;
+  const MovieDetailPage({super.key, required this.movie});
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -30,7 +32,10 @@ class _MovieDetailPageState extends State<MovieDetailPage>
       body: SingleChildScrollView(
           child: Stack(
         children: [
-          BackgroundWidget(size: size),
+          BackgroundWidget(
+            size: size,
+            movie: widget.movie,
+          ),
           Container(
             height: size.height / 3.5,
             decoration: const BoxDecoration(
@@ -50,7 +55,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     SizedBox(
                       width: size.width / 2.5,
                       child: Image.asset(
-                        AssetPath.posterRalph,
+                        widget.movie.poster,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -61,8 +66,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                               padding:
                                   const EdgeInsets.only(left: 8, bottom: 8),
                               width: size.width,
-                              child: const Text(
-                                'Ralph Breaks The Internet',
+                              child: Text(
+                                widget.movie.name,
                                 style: AppTextStyles.heading20,
                               )),
                           Container(
@@ -74,7 +79,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                             padding: const EdgeInsets.only(left: 8, bottom: 8),
                             width: size.width,
                             child: Text(
-                              'Action & adventure, Comedy',
+                              widget.movie.genre,
                               style: AppTextStyles.normal16
                                   .copyWith(color: AppColors.green),
                             ),
@@ -82,7 +87,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                           Container(
                             padding: const EdgeInsets.only(left: 8, bottom: 8),
                             width: size.width,
-                            child: Text('Duration: 1h41min',
+                            child: Text('Duration: ${widget.movie.duration}min',
                                 style: AppTextStyles.normal16
                                     .copyWith(color: AppColors.grey)),
                           )
@@ -129,14 +134,18 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              '   Ralph and Vanellope have remained friends and spend all their free time after work playing in the other games in Litwak\'s Arcade. However, when Vanellope\'s game, Sugar Rush, is accidentally broken, Ralph and Vanellope must enter the world of the Internet to find a replacement part.',
+                              '   ${widget.movie.synopsis}',
                               style: AppTextStyles.normal16
                                   .copyWith(color: AppColors.grey),
                             ),
                           ),
                           buildTitle('Cast and Crew'),
-                          CastBar(size: size),
-                          buildTitle('Trailer and song')
+                          CastBar(
+                            size: size,
+                            movie: widget.movie,
+                          ),
+                          buildTitle('Trailer and song'),
+                          TrailerBar(size: size)
                         ],
                       ),
                       Container(

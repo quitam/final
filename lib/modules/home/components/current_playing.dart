@@ -16,26 +16,31 @@ class PlayingMoviesSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
-      items: movies
+      items: [movies[0], movies[5], movies[4]]
           .map((e) => Builder(builder: (context) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MovieDetailPage(),
+                          builder: (context) => MovieDetailPage(
+                            movie: e,
+                          ),
                         ));
                   },
                   child: Stack(
                     children: [
-                      Container(
-                        width: size.width,
-                        padding: const EdgeInsets.only(left: 10, bottom: 24),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(e.imagePath),
+                      Hero(
+                        tag: e.banner,
+                        child: Container(
+                          width: size.width,
+                          padding: const EdgeInsets.only(left: 10, bottom: 24),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(e.banner),
+                            ),
                           ),
                         ),
                       ),

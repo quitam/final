@@ -1,4 +1,5 @@
 import 'package:final_project/models/test_models.dart';
+import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class UpComing extends StatelessWidget {
@@ -16,16 +17,29 @@ class UpComing extends StatelessWidget {
       height: size.width / 2.5,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: comings.length,
+          itemCount: movies.length,
           itemBuilder: (context, index) {
-            return Container(
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MovieDetailPage(
+                        movie: movies[index],
+                      ),
+                    ));
+              },
+              child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 alignment: Alignment.center,
                 width: 120,
-                child: Image.asset(
-                  comings[index].imagePath,
-                  fit: BoxFit.cover,
-                ));
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                        image: AssetImage(movies[index].poster),
+                        fit: BoxFit.cover)),
+              ),
+            );
           }),
     );
   }

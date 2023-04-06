@@ -4,9 +4,11 @@ import 'package:final_project/models/test_models.dart';
 import 'package:flutter/material.dart';
 
 class CasterItem extends StatelessWidget {
+  final Movie movie;
   const CasterItem({
     super.key,
     required this.size,
+    required this.movie,
   });
 
   final Size size;
@@ -15,7 +17,7 @@ class CasterItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: casters.length,
+      itemCount: movie.casters.length,
       itemBuilder: (context, index) {
         return Column(
           children: [
@@ -26,11 +28,11 @@ class CasterItem extends StatelessWidget {
                   height: size.width / 4.5,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage(casters[index].imagePath)),
+                        image: AssetImage(movie.casters[index]['imagePath'])),
                   ),
                 )),
             Text(
-              casters[index].name,
+              movie.casters[index]['nameCast'],
               style: AppTextStyles.normal16.copyWith(color: AppColors.grey),
             )
           ],
