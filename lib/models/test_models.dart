@@ -144,19 +144,19 @@ List<TicketStates> dateStates = [
   TicketStates(state: 'idle')
 ];
 
-class Genre {
+class TestGenre {
   String id;
 
-  Genre(this.id);
+  TestGenre(this.id);
 }
 
-List<Genre> genres = [
-  Genre("All"),
-  Genre("Action"),
-  Genre("Fantasy"),
-  Genre("Horor"),
-  Genre("Drama"),
-  Genre("Mystery"),
+List<TestGenre> genres = [
+  TestGenre("All"),
+  TestGenre("Action"),
+  TestGenre("Fantasy"),
+  TestGenre("Horor"),
+  TestGenre("Drama"),
+  TestGenre("Mystery"),
 ];
 
 class Trailer {
