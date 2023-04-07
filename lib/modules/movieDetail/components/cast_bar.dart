@@ -3,7 +3,7 @@ import 'package:final_project/modules/movieDetail/components/caster_item.dart';
 import 'package:flutter/material.dart';
 
 class CastBar extends StatelessWidget {
-  final Movie movie;
+  final TestMovie movie;
   const CastBar({
     super.key,
     required this.size,

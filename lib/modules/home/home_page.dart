@@ -23,9 +23,9 @@ class MyHomePage extends StatelessWidget {
               SearchBar(size: size),
               //category bar
               const CategoryBar(),
-              buildTitle('Current Playing'),
+              buildTitle('Đang chiếu'),
               PlayingMoviesSlider(size: size),
-              buildTitle('Coming soon'),
+              buildTitle('Sắp chiếu'),
               UpComing(size: size)
             ],
           )),

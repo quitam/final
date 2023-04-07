@@ -1,3 +1,4 @@
+import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -12,35 +13,56 @@ class UpComing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      height: size.width / 2.5,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: movies.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MovieDetailPage(
-                        movie: movies[index],
-                      ),
-                    ));
+    return StreamBuilder(
+      stream: getUpComingMovies(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && !snapshot.hasError) {
+          final upcomingMovies = snapshot.data!;
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            height: 160,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: upcomingMovies.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MovieDetailPage(
+                            movie: upcomingMovies[index],
+                            testMovie: movies[0],
+                          ),
+                        ));
+                  },
+                  child: FutureBuilder(
+                      future: getImageUrl(upcomingMovies[index].bannerUrl),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasError && snapshot.hasData) {
+                          String image = snapshot.data ?? "";
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            alignment: Alignment.center,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    image: NetworkImage(image),
+                                    fit: BoxFit.cover)),
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                );
               },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                alignment: Alignment.center,
-                width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        image: AssetImage(movies[index].poster),
-                        fit: BoxFit.cover)),
-              ),
-            );
-          }),
+            ),
+          );
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }

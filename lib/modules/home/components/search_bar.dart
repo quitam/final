@@ -35,9 +35,9 @@ class SearchBar extends StatelessWidget {
               ),
               Expanded(
                   child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search movie...',
-                  hintStyle: AppTextStyles.heading18,
+                  decoration: InputDecoration(
+                  hintText: 'Tìm tên phim',
+                  hintStyle: AppTextStyles.hint15,
                   border: InputBorder.none,
                 ),
               ))

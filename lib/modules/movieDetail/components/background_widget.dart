@@ -1,5 +1,6 @@
 import 'package:final_project/config/themes/app_colors.dart';
-import 'package:final_project/models/test_models.dart';
+import 'package:final_project/funtion_library.dart';
+import 'package:final_project/models/models.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundWidget extends StatelessWidget {
@@ -16,18 +17,31 @@ class BackgroundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Hero(
-          tag: movie.banner,
-          child: Container(
-              height: size.height / 3.5,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage(movie.banner)),
-                gradient: const LinearGradient(colors: [
-                  AppColors.darkerBackground,
-                  AppColors.darkBackground
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-              )),
+        FutureBuilder(
+          future: getImageUrl(movie.bannerUrl),
+          builder: (context, snapshot) {
+            if (!snapshot.hasError && snapshot.hasData) {
+              String imageURL = snapshot.data ?? "";
+              return Hero(
+                tag: imageURL,
+                child: Container(
+                  height: size.height / 3.5,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(imageURL),
+                    ),
+                    gradient: const LinearGradient(colors: [
+                      AppColors.darkerBackground,
+                      AppColors.darkBackground
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  ),
+                ),
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
         ),
         Container(
           height: 200,

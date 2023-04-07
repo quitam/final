@@ -4,7 +4,7 @@ import 'package:final_project/models/test_models.dart';
 import 'package:flutter/material.dart';
 
 class CasterItem extends StatelessWidget {
-  final Movie movie;
+  final TestMovie movie;
   const CasterItem({
     super.key,
     required this.size,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class _CategoryBarState extends State<CategoryBar> {
                           )
                         : const BoxDecoration(color: Colors.transparent),
                     child: Text(
-                      genres[index].id,
+                      genres[index].displayName,
                       style: AppTextStyles.normal15,
                     ),
                   ),
@@ -63,6 +64,4 @@ class _CategoryBarState extends State<CategoryBar> {
   }
 }
 
-Stream<List<Genre>> getGenres() =>
-    FirebaseFirestore.instance.collection("Genre").snapshots().map((snapshot) =>
-        snapshot.docs.map((e) => Genre.fromJson(e.data())).toList());
+
