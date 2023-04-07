@@ -53,11 +53,14 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                 padding: EdgeInsets.only(left: 20, top: size.height / 4.5),
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: size.width / 2.5,
-                      child: Image.asset(
-                        widget.movie.poster,
-                        fit: BoxFit.cover,
+                    Hero(
+                      tag: widget.movie.id,
+                      child: SizedBox(
+                        width: size.width / 2.5,
+                        child: Image.asset(
+                          widget.movie.poster,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Expanded(

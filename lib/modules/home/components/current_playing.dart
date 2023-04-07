@@ -2,7 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/models/test_models.dart';
-import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
+
+import 'package:final_project/modules/selectCinema/select_cinema_page.dart';
 import 'package:flutter/material.dart';
 
 class PlayingMoviesSlider extends StatelessWidget {
@@ -23,24 +24,19 @@ class PlayingMoviesSlider extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MovieDetailPage(
-                            movie: e,
-                          ),
+                          builder: (context) => const SelectCinemaPage(),
                         ));
                   },
                   child: Stack(
                     children: [
-                      Hero(
-                        tag: e.banner,
-                        child: Container(
-                          width: size.width,
-                          padding: const EdgeInsets.only(left: 10, bottom: 24),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(e.banner),
-                            ),
+                      Container(
+                        width: size.width,
+                        padding: const EdgeInsets.only(left: 10, bottom: 24),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(e.banner),
                           ),
                         ),
                       ),

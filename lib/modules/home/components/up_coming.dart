@@ -29,15 +29,18 @@ class UpComing extends StatelessWidget {
                       ),
                     ));
               },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                alignment: Alignment.center,
-                width: 120,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        image: AssetImage(movies[index].poster),
-                        fit: BoxFit.cover)),
+              child: Hero(
+                tag: movies[index].id,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  alignment: Alignment.center,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                          image: AssetImage(movies[index].poster),
+                          fit: BoxFit.cover)),
+                ),
               ),
             );
           }),
