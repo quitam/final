@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/models/test_models.dart';
+import 'package:final_project/models/models.dart';
 import 'package:flutter/material.dart';
 
 class CategoryBar extends StatefulWidget {
@@ -19,33 +20,49 @@ class _CategoryBarState extends State<CategoryBar> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: genres.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedTab = index;
-                });
+      child: StreamBuilder(
+        stream: getGenres(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final genres = snapshot.data!;
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: genres.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedTab = index;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 16),
+                    alignment: Alignment.center,
+                    width: 90,
+                    decoration: selectedTab == index
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.lightBlue,
+                          )
+                        : const BoxDecoration(color: Colors.transparent),
+                    child: Text(
+                      genres[index].id,
+                      style: AppTextStyles.normal15,
+                    ),
+                  ),
+                );
               },
-              child: Container(
-                margin: const EdgeInsets.only(left: 16),
-                alignment: Alignment.center,
-                width: 90,
-                decoration: selectedTab == index
-                    ? BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.lightBlue,
-                      )
-                    : const BoxDecoration(color: Colors.transparent),
-                child: Text(
-                  genres[index].id,
-                  style: AppTextStyles.normal15,
-                ),
-              ),
             );
-          }),
+          }
+          else {
+            return const Spacer();
+          }
+        },
+      ),
     );
   }
 }
+
+Stream<List<Genre>> getGenres() =>
+    FirebaseFirestore.instance.collection("Genre").snapshots().map((snapshot) =>
+        snapshot.docs.map((e) => Genre.fromJson(e.data())).toList());
