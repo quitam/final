@@ -25,4 +25,8 @@ class AppTextStyles {
     color: AppColors.white,
     fontSize: 15,
   );
+  static const hint15 = TextStyle(
+    color: Colors.white54,
+    fontSize: 15,
+  );
 }

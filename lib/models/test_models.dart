@@ -5,11 +5,11 @@ import 'package:final_project/constants/asset_path.dart';
 String dummyText =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since. When an unknown printer took a galley.";
 
-class Movie {
+class TestMovie {
   final String name, genre, synopsis, poster, banner;
   final int id, duration;
   final List casters;
-  Movie(
+  TestMovie(
       {required this.id,
       required this.name,
       required this.poster,
@@ -20,8 +20,8 @@ class Movie {
       required this.casters});
 }
 
-List<Movie> movies = [
-  Movie(
+List<TestMovie> movies = [
+  TestMovie(
       id: 1,
       name: "How to train you dragon 3",
       poster: AssetPath.posterDragon,
@@ -33,7 +33,7 @@ List<Movie> movies = [
         {'nameCast': 'Reilly', 'imagePath': AssetPath.cast1},
         {'nameCast': 'McBrayer', 'imagePath': AssetPath.cast3}
       ]),
-  Movie(
+  TestMovie(
       id: 2,
       name: "Onward",
       poster: AssetPath.posterOnward,
@@ -46,7 +46,7 @@ List<Movie> movies = [
         {'nameCast': 'Silverman', 'imagePath': AssetPath.cast4},
         {'nameCast': 'Henson', 'imagePath': AssetPath.cast5}
       ]),
-  Movie(
+  TestMovie(
       id: 3,
       name: "Ralph",
       poster: AssetPath.posterRalph,
@@ -60,7 +60,7 @@ List<Movie> movies = [
         {'nameCast': 'Reilly', 'imagePath': AssetPath.cast1},
         {'nameCast': 'Henson', 'imagePath': AssetPath.cast5}
       ]),
-  Movie(
+  TestMovie(
       id: 4,
       name: "Frozen",
       poster: AssetPath.posterFrozen,
@@ -74,7 +74,7 @@ List<Movie> movies = [
         {'nameCast': 'Reilly', 'imagePath': AssetPath.cast1},
         {'nameCast': 'Henson', 'imagePath': AssetPath.cast5}
       ]),
-  Movie(
+  TestMovie(
       id: 5,
       name: "Scoob",
       poster: AssetPath.posterScoob,
@@ -88,7 +88,7 @@ List<Movie> movies = [
         {'nameCast': 'Reilly', 'imagePath': AssetPath.cast1},
         {'nameCast': 'Henson', 'imagePath': AssetPath.cast5}
       ]),
-  Movie(
+  TestMovie(
       id: 6,
       name: "Spongebob",
       poster: AssetPath.posterSpongebob,
