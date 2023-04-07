@@ -8,6 +8,8 @@ class AppTextStyles {
       fontSize: 32,
       fontWeight: FontWeight.bold,
       color: AppColors.white);
+  static const heading28 = TextStyle(
+      fontFamily: FontFamily.montserrat, fontSize: 28, color: AppColors.white);
   static const heading20 = TextStyle(
       fontFamily: FontFamily.montserrat, fontSize: 20, color: AppColors.white);
   static const heading18 = TextStyle(

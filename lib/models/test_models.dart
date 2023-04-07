@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:final_project/constants/asset_path.dart';
 
 String dummyText =
@@ -100,6 +102,46 @@ List<TestMovie> movies = [
         {'nameCast': 'Reilly', 'imagePath': AssetPath.cast1},
         {'nameCast': 'Henson', 'imagePath': AssetPath.cast5}
       ])
+];
+
+class Day {
+  final int dd;
+  final String day;
+  Day({required this.dd, required this.day});
+}
+
+List<Day> days = [
+  Day(dd: 7, day: "Fri"),
+  Day(dd: 8, day: "Sat"),
+  Day(dd: 9, day: "Sun"),
+  Day(dd: 10, day: "Mon"),
+  Day(dd: 11, day: "Tue"),
+];
+
+class Time {
+  final String time;
+  Time({required this.time});
+}
+
+List<Time> times = [
+  Time(time: '13:00'),
+  Time(time: '15:00'),
+  Time(time: '17:30'),
+  Time(time: '19:00'),
+  Time(time: '22:00')
+];
+
+class TicketStates {
+  final String state;
+  TicketStates({required this.state});
+}
+
+List<TicketStates> dateStates = [
+  TicketStates(state: 'idle'),
+  TicketStates(state: 'busy'),
+  TicketStates(state: 'idle'),
+  TicketStates(state: 'idle'),
+  TicketStates(state: 'idle')
 ];
 
 class TestGenre {
