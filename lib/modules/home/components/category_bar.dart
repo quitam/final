@@ -25,36 +25,40 @@ class _CategoryBarState extends State<CategoryBar> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final genres = snapshot.data!;
-            return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: genres.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedTab = index;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 16),
-                    alignment: Alignment.center,
-                    width: 90,
-                    decoration: selectedTab == index
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.lightBlue,
-                          )
-                        : const BoxDecoration(color: Colors.transparent),
-                    child: Text(
-                      genres[index].id,
-                      style: AppTextStyles.normal15,
+            return Container(
+              margin: const EdgeInsets.only(left: 20),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: genres.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTab = index;
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      alignment: Alignment.center,
+                      width: 90,
+                      decoration: selectedTab == index
+                          ? BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.lightBlue,
+                            )
+                          : const BoxDecoration(color: Colors.transparent),
+                      child: Text(
+                        //to uppercase first letter of genre
+                        genres[index].id[0].toUpperCase() +
+                            genres[index].id.substring(1).toLowerCase(),
+                        style: AppTextStyles.normal15,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
-          }
-          else {
+          } else {
             return const Spacer();
           }
         },
