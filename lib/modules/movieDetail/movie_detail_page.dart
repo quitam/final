@@ -1,5 +1,7 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/funtion_library.dart';
+import 'package:final_project/models/models.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
@@ -8,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MovieDetailPage extends StatefulWidget {
+  final TestMovie testMovie;
   final Movie movie;
-  const MovieDetailPage({super.key, required this.movie});
+  const MovieDetailPage(
+      {super.key, required this.testMovie, required this.movie});
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -53,15 +57,22 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                 padding: EdgeInsets.only(left: 20, top: size.height / 4.5),
                 child: Row(
                   children: [
-                    Hero(
-                      tag: widget.movie.id,
-                      child: SizedBox(
-                        width: size.width / 2.5,
-                        child: Image.asset(
-                          widget.movie.poster,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    FutureBuilder(
+                      future: getImageUrl(widget.movie.posterUrl),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasError && snapshot.hasData) {
+                          String imageURL = snapshot.data ?? "";
+                          return SizedBox(
+                            width: size.width / 2.5,
+                            child: Image(
+                              image: NetworkImage(imageURL),
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
                     ),
                     Expanded(
                       child: Column(
@@ -82,16 +93,32 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                           Container(
                             padding: const EdgeInsets.only(left: 8, bottom: 8),
                             width: size.width,
-                            child: Text(
-                              widget.movie.genre,
-                              style: AppTextStyles.normal16
-                                  .copyWith(color: AppColors.green),
+                            child: StreamBuilder(
+                              stream: getGenres(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasError && snapshot.hasData) {
+                                  List<Genre> genres = snapshot.data!;
+                                  return Text(
+                                    getGenresAsSingleString(widget.movie, genres),
+                                    style: AppTextStyles.normal16
+                                        .copyWith(color: AppColors.green),
+                                  );
+                                } else {
+                                  return const Text("N/A");
+                                }
+                              },
                             ),
+                            // child: Text(
+                            //   getGenresAsSingleString(widget.movie),
+                            //   style: AppTextStyles.normal16
+                            //       .copyWith(color: AppColors.green),
+                            // ),
                           ),
                           Container(
                             padding: const EdgeInsets.only(left: 8, bottom: 8),
                             width: size.width,
-                            child: Text('Duration: ${widget.movie.duration}min',
+                            child: Text(
+                                'Thời lượng: ${widget.movie.duration} phút',
                                 style: AppTextStyles.normal16
                                     .copyWith(color: AppColors.grey)),
                           )
@@ -111,10 +138,10 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     child: TabBar(
                       tabs: const [
                         Tab(
-                          text: 'Abbout Movie',
+                          text: 'Thông Tin Phim',
                         ),
                         Tab(
-                          text: 'Review',
+                          text: 'Đánh Giá',
                         )
                       ],
                       controller: _tabController,
@@ -134,27 +161,27 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          buildTitle('Synopsis'),
+                          buildTitle('Nội dung phim'),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
-                              '   ${widget.movie.synopsis}',
+                              '   ${widget.testMovie.synopsis}',
                               style: AppTextStyles.normal16
                                   .copyWith(color: AppColors.grey),
                             ),
                           ),
-                          buildTitle('Cast and Crew'),
+                          buildTitle('Diễn viên'),
                           CastBar(
                             size: size,
-                            movie: widget.movie,
+                            movie: widget.testMovie,
                           ),
-                          buildTitle('Trailer and song'),
+                          buildTitle('Trailer'),
                           TrailerBar(size: size)
                         ],
                       ),
                       Container(
                         alignment: Alignment.center,
-                        child: const Text('Review Tab'),
+                        child: const Text('Đánh giá'),
                       )
                     ],
                   ))
@@ -189,4 +216,27 @@ class _MovieDetailPageState extends State<MovieDetailPage>
       ),
     );
   }
+}
+
+String getGenresAsSingleString(Movie movie, List<Genre> genres) {
+  String result = "";
+  if (movie.genres.isNotEmpty) {
+    for (int i = 0; i < movie.genres.length; i++) {
+      if (i == 0) {
+        result += getGenreDisplayName(movie.genres[i], genres);
+      } else {
+        result = "$result, ${getGenreDisplayName(movie.genres[i], genres)}";
+      }
+    }
+  }
+  return result;
+}
+
+String getGenreDisplayName(String id, List<Genre> genres) {
+  for (Genre genre in genres) {
+    if (genre.id == id) {
+      return genre.displayName;
+    }
+  }
+  return "";
 }

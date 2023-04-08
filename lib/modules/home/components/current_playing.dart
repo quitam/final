@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/test_models.dart';
-
-import 'package:final_project/modules/selectCinema/select_cinema_page.dart';
+import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class PlayingMoviesSlider extends StatelessWidget {
@@ -11,60 +11,86 @@ class PlayingMoviesSlider extends StatelessWidget {
     super.key,
     required this.size,
   });
-
   final Size size;
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      items: [movies[0], movies[5], movies[4]]
-          .map((e) => Builder(builder: (context) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SelectCinemaPage(),
-                        ));
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: size.width,
-                        padding: const EdgeInsets.only(left: 10, bottom: 24),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(e.banner),
-                          ),
+    return StreamBuilder(
+      stream: getPlayingMovies(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final playingMovies = snapshot.data!;
+          return CarouselSlider.builder(
+            itemCount: playingMovies.length,
+            itemBuilder: (context, index, realIndex) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MovieDetailPage(
+                        movie: playingMovies[index],
+                        testMovie: movies[0],
+                      ),
+                    ),
+                  );
+                },
+                child: Stack(
+                  children: [
+                    FutureBuilder(
+                      future: getImageUrl(playingMovies[index].bannerUrl),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasError && snapshot.hasData) {
+                          String image = snapshot.data ?? "";
+                          return Hero(
+                            tag: playingMovies[index].bannerUrl,
+                            child: Container(
+                              width: size.width,
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 24),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(image),
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                    Container(
+                      alignment: Alignment.bottomLeft,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.gradientBlack1Start,
+                              AppColors.gradientBlack1End,
+                            ]),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        child: Text(
+                          playingMovies[index].name,
+                          style: AppTextStyles.heading18,
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                AppColors.gradientBlack1Start,
-                                AppColors.gradientBlack1End,
-                              ]),
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          child: Text(
-                            e.name,
-                            style: AppTextStyles.heading18,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }))
-          .toList(),
-      options: CarouselOptions(autoPlay: true, enlargeCenterPage: true),
+                    ),
+                  ],
+                ),
+              );
+            },
+            options: CarouselOptions(autoPlay: true, enlargeCenterPage: true),
+          );
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
