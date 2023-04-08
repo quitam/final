@@ -1,7 +1,9 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/models/test_models.dart';
-import 'package:final_project/modules/selectCinema/components/time_bar.dart';
+import 'package:final_project/modules/selectCinema/components/header.dart';
+import 'package:final_project/modules/selectSeat/select_seat_page.dart';
+import 'package:final_project/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -31,15 +33,9 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
             children: [
               Stack(
                 children: [
-                  SizedBox(
-                    height: size.height / 10,
-                    child: const Center(
-                      child: Text(
-                        'Ralph Breaks the\nInternet',
-                        style: AppTextStyles.heading28,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                  Header(
+                    size: size,
+                    title: 'Ralph Breaks the\nInternet',
                   ),
                   buildAppBar(context)
                 ],
@@ -234,7 +230,19 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 32),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (selectedDate != -1 && selectedTimeLot != -1 ||
+                        selectedDate != -1 && selectedTimeCGV != -1 ||
+                        selectedDate != -1 && selectedTimeBHD != -1) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SelectSeatPage(),
+                          ));
+                    } else {
+                      toast('Please select date and cinema!');
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor:
                           (selectedDate != -1 && selectedTimeLot != -1 ||
@@ -262,7 +270,8 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Text(
         title,
-        style: AppTextStyles.heading20,
+        style: AppTextStyles.heading20
+            .copyWith(fontStyle: FontStyle.italic, color: AppColors.grey),
       ),
     );
   }

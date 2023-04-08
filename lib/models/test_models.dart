@@ -144,21 +144,6 @@ List<TicketStates> dateStates = [
   TicketStates(state: 'idle')
 ];
 
-class TestGenre {
-  String id;
-
-  TestGenre(this.id);
-}
-
-List<TestGenre> genres = [
-  TestGenre("All"),
-  TestGenre("Action"),
-  TestGenre("Fantasy"),
-  TestGenre("Horor"),
-  TestGenre("Drama"),
-  TestGenre("Mystery"),
-];
-
 class Trailer {
   String name;
   String imagePath;
@@ -170,3 +155,6 @@ List<Trailer> trailers = [
   Trailer("Trailer 1", AssetPath.trailer1),
   Trailer("Trailer 1", AssetPath.trailer2),
 ];
+
+List seatRow = ['A', 'B', 'C', 'D', 'E'].reversed.toList();
+List seatNumber = [1, 2, 3, 4, 5, 6];
