@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
-import 'package:final_project/models/models.dart';
+
 import 'package:flutter/material.dart';
 
 class CategoryBar extends StatefulWidget {
@@ -54,8 +53,7 @@ class _CategoryBarState extends State<CategoryBar> {
                 );
               },
             );
-          }
-          else {
+          } else {
             return const Spacer();
           }
         },
@@ -63,5 +61,3 @@ class _CategoryBarState extends State<CategoryBar> {
     );
   }
 }
-
-
