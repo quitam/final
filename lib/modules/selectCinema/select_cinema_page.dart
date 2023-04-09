@@ -234,16 +234,25 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                 margin: const EdgeInsets.symmetric(vertical: 32),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (selectedDate != -1 && selectedTimeLot != -1 ||
-                        selectedDate != -1 && selectedTimeCGV != -1 ||
-                        selectedDate != -1 && selectedTimeBHD != -1) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SelectSeatPage(),
-                          ));
+                    if (selectedTimeLot != -1 ||
+                        selectedTimeCGV != -1 ||
+                        selectedTimeBHD != -1) {
+                      if (selectedDate == -1) {
+                        toast('Vui lòng chọn ngày');
+                      } else {
+                        toast('Chọn ghế');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SelectSeatPage(),
+                            ));
+                      }
                     } else {
-                      toast('Please select date and cinema!');
+                      if (selectedDate == -1) {
+                        toast('Vui lòng chọn ngày và rạp');
+                      } else {
+                        toast('Vui lòng chọn rạp');
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
