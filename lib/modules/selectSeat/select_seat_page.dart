@@ -1,6 +1,7 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/constants/asset_path.dart';
+import 'package:final_project/models/models.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/checkOut/check_out_page.dart';
 import 'package:final_project/widgets/toast.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SelectSeatPage extends StatelessWidget {
-  const SelectSeatPage({super.key});
+  final String cinema;
+  final Movie movie;
+  const SelectSeatPage({super.key, required this.movie, required this.cinema});
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +28,15 @@ class SelectSeatPage extends StatelessWidget {
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: const Text(
-                  'Ralph Breaks the Internet',
+                child: Text(
+                  movie.name,
                   style: AppTextStyles.heading20,
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: Text(
-                  'Lotteria',
+                  cinema,
                   style: AppTextStyles.heading18.copyWith(
                       fontStyle: FontStyle.italic, color: AppColors.grey),
                 ),

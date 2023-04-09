@@ -244,7 +244,13 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SelectSeatPage(),
+                              builder: (context) => SelectSeatPage(
+                                  movie: widget.movie,
+                                  cinema: selectedTimeLot != -1
+                                      ? 'Lotteria'
+                                      : (selectedTimeCGV != -1
+                                          ? 'CGV'
+                                          : 'BHD Star')),
                             ));
                       }
                     } else {
