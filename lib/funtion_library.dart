@@ -44,7 +44,8 @@ class ImageFromUrl extends StatelessWidget {
           return Text('Error: ${snapshot.error}');
         }
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const SizedBox(
+              height: 100, width: 100, child: CircularProgressIndicator());
         }
         String url = snapshot.data ?? "default";
         return Image.network(url);

@@ -1,3 +1,4 @@
+import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
@@ -31,6 +32,7 @@ class UpComing extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MovieDetailPage(
+                            isPlaying: false,
                             movie: upcomingMovies[index],
                             testMovie: movies[0],
                           ),
@@ -42,17 +44,23 @@ class UpComing extends StatelessWidget {
                         if (!snapshot.hasError && snapshot.hasData) {
                           String image = snapshot.data ?? "";
                           return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
                             alignment: Alignment.center,
                             width: 120,
                             decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                     image: NetworkImage(image),
                                     fit: BoxFit.cover)),
                           );
                         } else {
-                          return const CircularProgressIndicator();
+                          return const Center(
+                            child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator()),
+                          );
                         }
                       }),
                 );

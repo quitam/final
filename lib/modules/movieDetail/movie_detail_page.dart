@@ -3,6 +3,7 @@ import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
 import 'package:final_project/models/test_models.dart';
+import 'package:final_project/modules/movieDetail/components/fa_button.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
 import 'package:final_project/modules/movieDetail/components/trailer_bar.dart';
@@ -10,10 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MovieDetailPage extends StatefulWidget {
+  final bool isPlaying;
   final TestMovie testMovie;
   final Movie movie;
-  const MovieDetailPage(
-      {super.key, required this.testMovie, required this.movie});
+  const MovieDetailPage({
+    super.key,
+    required this.testMovie,
+    required this.movie,
+    required this.isPlaying,
+  });
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -35,6 +41,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildAppBar(context),
+      floatingActionButton: widget.isPlaying ? FAButton(widget: widget) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
           child: Stack(
         children: [
@@ -99,7 +107,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                                 if (!snapshot.hasError && snapshot.hasData) {
                                   List<Genre> genres = snapshot.data!;
                                   return Text(
-                                    getGenresAsSingleString(widget.movie, genres),
+                                    getGenresAsSingleString(
+                                        widget.movie, genres),
                                     style: AppTextStyles.normal16
                                         .copyWith(color: AppColors.green),
                                   );
@@ -191,6 +200,20 @@ class _MovieDetailPageState extends State<MovieDetailPage>
           ),
         ],
       )),
+    );
+  }
+
+  Container buildFAB() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: FloatingActionButton.extended(
+          onPressed: () {
+            print('object');
+          },
+          label: const Text(
+            'Đặt vé ngay',
+            style: AppTextStyles.heading18,
+          )),
     );
   }
 

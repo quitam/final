@@ -1,5 +1,6 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/models/models.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/selectCinema/components/header.dart';
 import 'package:final_project/modules/selectSeat/select_seat_page.dart';
@@ -8,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SelectCinemaPage extends StatefulWidget {
-  const SelectCinemaPage({super.key});
+  final Movie movie;
+  const SelectCinemaPage({super.key, required this.movie});
 
   @override
   State<SelectCinemaPage> createState() => _SelectCinemaPageState();
@@ -25,6 +27,7 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SafeArea(
@@ -35,9 +38,9 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                 children: [
                   Header(
                     size: size,
-                    title: 'Ralph Breaks the\nInternet',
+                    title: widget.movie.name,
                   ),
-                  buildAppBar(context)
+                  //buildAppBar(context)
                 ],
               ),
               Container(
