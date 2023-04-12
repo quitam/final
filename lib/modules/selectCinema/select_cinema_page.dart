@@ -255,9 +255,9 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                       }
                     } else {
                       if (selectedDate == -1) {
-                        toast('Vui lòng chọn ngày và rạp');
+                        toast('Không được để trống thông tin');
                       } else {
-                        toast('Vui lòng chọn rạp');
+                        toast('Vui lòng chọn rạp và giờ');
                       }
                     }
                   },

@@ -127,12 +127,11 @@ class SelectSeatPage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // ignore: avoid_print
-                    print('Check out');
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CheckOutPage(),
+                          builder: (context) =>
+                              CheckOutPage(movie: movie, cinema: cinema),
                         ));
                   },
                   child: Container(
@@ -143,7 +142,7 @@ class SelectSeatPage extends StatelessWidget {
                         color: AppColors.blueMain,
                         borderRadius: BorderRadius.circular(16)),
                     child: const Text(
-                      'Check out',
+                      'Thanh toán',
                       style: AppTextStyles.heading20,
                     ),
                   ),

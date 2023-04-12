@@ -170,7 +170,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          buildTitle('Nội dung phim'),
+                          buildTitle('Tóm tắt'),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
@@ -200,20 +200,6 @@ class _MovieDetailPageState extends State<MovieDetailPage>
           ),
         ],
       )),
-    );
-  }
-
-  Container buildFAB() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: FloatingActionButton.extended(
-          onPressed: () {
-            print('object');
-          },
-          label: const Text(
-            'Đặt vé ngay',
-            style: AppTextStyles.heading18,
-          )),
     );
   }
 
