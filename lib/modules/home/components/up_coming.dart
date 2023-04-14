@@ -68,7 +68,7 @@ class UpComing extends StatelessWidget {
             ),
           );
         } else {
-          return const CircularProgressIndicator();
+          return Container(height: 0, width: 0);
         }
       },
     );

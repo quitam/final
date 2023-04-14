@@ -44,162 +44,168 @@ class _MovieDetailPageState extends State<MovieDetailPage>
       floatingActionButton: widget.isPlaying ? FAButton(widget: widget) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
-          child: Stack(
-        children: [
-          BackgroundWidget(
-            size: size,
-            movie: widget.movie,
-          ),
-          Container(
-            height: size.height / 3.5,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Color.fromARGB(0, 11, 15, 47),
-              AppColors.darkBackground
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, top: size.height / 4.5),
-                child: Row(
-                  children: [
-                    FutureBuilder(
-                      future: getImageUrl(widget.movie.posterUrl),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasError && snapshot.hasData) {
-                          String imageURL = snapshot.data ?? "";
-                          return SizedBox(
-                            width: size.width / 2.5,
-                            child: Image(
-                              image: NetworkImage(imageURL),
-                              fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            BackgroundWidget(
+              size: size,
+              movie: widget.movie,
+            ),
+            Container(
+              height: size.height / 3.5,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Color.fromARGB(0, 11, 15, 47),
+                AppColors.darkBackground
+              ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: size.height / 4.5),
+                  child: Row(
+                    children: [
+                      FutureBuilder(
+                        future: getImageUrl(widget.movie.posterUrl),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasError && snapshot.hasData) {
+                            String imageURL = snapshot.data ?? "";
+                            return SizedBox(
+                              width: size.width / 2.5,
+                              child: Image(
+                                image: NetworkImage(imageURL),
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          } else {
+                            return Container(height: 0, width: 0);
+                          }
+                        },
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                                padding:
+                                    const EdgeInsets.only(left: 8, bottom: 8),
+                                width: size.width,
+                                child: Text(
+                                  widget.movie.name,
+                                  style: AppTextStyles.heading20,
+                                )),
+                            Container(
+                                margin:
+                                    const EdgeInsets.only(left: 8, bottom: 8),
+                                child: Row(
+                                  children: const [Text('5000 votes')],
+                                )),
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 8, bottom: 8),
+                              width: size.width,
+                              child: StreamBuilder(
+                                stream: getGenres(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasError && snapshot.hasData) {
+                                    List<Genre> genres = snapshot.data!;
+                                    return Text(
+                                      getGenresAsSingleString(
+                                          widget.movie, genres),
+                                      style: AppTextStyles.normal16
+                                          .copyWith(color: AppColors.green),
+                                    );
+                                  } else {
+                                    return const Text("N/A");
+                                  }
+                                },
+                              ),
+                              // child: Text(
+                              //   getGenresAsSingleString(widget.movie),
+                              //   style: AppTextStyles.normal16
+                              //       .copyWith(color: AppColors.green),
+                              // ),
                             ),
-                          );
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Container(
+                            Container(
                               padding:
                                   const EdgeInsets.only(left: 8, bottom: 8),
                               width: size.width,
                               child: Text(
-                                widget.movie.name,
-                                style: AppTextStyles.heading20,
-                              )),
-                          Container(
-                              margin: const EdgeInsets.only(left: 8, bottom: 8),
-                              child: Row(
-                                children: const [Text('5000 votes')],
-                              )),
-                          Container(
-                            padding: const EdgeInsets.only(left: 8, bottom: 8),
-                            width: size.width,
-                            child: StreamBuilder(
-                              stream: getGenres(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasError && snapshot.hasData) {
-                                  List<Genre> genres = snapshot.data!;
-                                  return Text(
-                                    getGenresAsSingleString(
-                                        widget.movie, genres),
-                                    style: AppTextStyles.normal16
-                                        .copyWith(color: AppColors.green),
-                                  );
-                                } else {
-                                  return const Text("N/A");
-                                }
-                              },
-                            ),
-                            // child: Text(
-                            //   getGenresAsSingleString(widget.movie),
-                            //   style: AppTextStyles.normal16
-                            //       .copyWith(color: AppColors.green),
-                            // ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(left: 8, bottom: 8),
-                            width: size.width,
-                            child: Text(
-                                'Thời lượng: ${widget.movie.duration} phút',
-                                style: AppTextStyles.normal16
-                                    .copyWith(color: AppColors.grey)),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: size.height - 120,
-                child: Column(children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    alignment: Alignment.center,
-                    width: size.width,
-                    child: TabBar(
-                      tabs: const [
-                        Tab(
-                          text: 'Thông Tin Phim',
+                                  'Thời lượng: ${widget.movie.duration} phút',
+                                  style: AppTextStyles.normal16
+                                      .copyWith(color: AppColors.grey)),
+                            )
+                          ],
                         ),
-                        Tab(
-                          text: 'Đánh Giá',
-                        )
-                      ],
-                      controller: _tabController,
-                      //indicatorSize: TabBarIndicatorSize.label,
-                      labelStyle: AppTextStyles.heading18
-                          .copyWith(fontWeight: FontWeight.w600),
-                      unselectedLabelStyle: AppTextStyles.heading18,
-                      indicatorColor: AppColors.white,
-                      indicatorPadding:
-                          const EdgeInsets.symmetric(horizontal: 20),
-                    ),
-                  ),
-                  Expanded(
-                      child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          buildTitle('Tóm tắt'),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              '   ${widget.testMovie.synopsis}',
-                              style: AppTextStyles.normal16
-                                  .copyWith(color: AppColors.grey),
-                            ),
-                          ),
-                          buildTitle('Diễn viên'),
-                          CastBar(
-                            size: size,
-                            movie: widget.testMovie,
-                          ),
-                          buildTitle('Trailer'),
-                          TrailerBar(size: size)
-                        ],
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: const Text('Đánh giá'),
                       )
                     ],
-                  ))
-                ]),
-              )
-            ],
-          ),
-        ],
-      )),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height - 120,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        alignment: Alignment.center,
+                        width: size.width,
+                        child: TabBar(
+                          tabs: const [
+                            Tab(
+                              text: 'Thông Tin Phim',
+                            ),
+                            Tab(
+                              text: 'Đánh Giá',
+                            )
+                          ],
+                          controller: _tabController,
+                          //indicatorSize: TabBarIndicatorSize.label,
+                          labelStyle: AppTextStyles.heading18
+                              .copyWith(fontWeight: FontWeight.w600),
+                          unselectedLabelStyle: AppTextStyles.heading18,
+                          indicatorColor: AppColors.white,
+                          indicatorPadding:
+                              const EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                buildTitle('Nội dung'),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(
+                                    '   ${widget.movie.synopsis}',
+                                    style: AppTextStyles.normal16
+                                        .copyWith(color: AppColors.grey),
+                                      maxLines: 4,
+                                      overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                                buildTitle('Diễn viên'),
+                                CastBar(size: size, movie: widget.movie),
+                                buildTitle('Trailer'),
+                                TrailerBar(size: size, movie: widget.movie),
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: const Text('Đánh giá'),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

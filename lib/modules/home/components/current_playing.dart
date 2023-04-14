@@ -59,7 +59,7 @@ class PlayingMoviesSlider extends StatelessWidget {
                             ),
                           );
                         } else {
-                          return const CircularProgressIndicator();
+                          return Container(height: 0, width: 0);
                         }
                       },
                     ),
@@ -89,7 +89,7 @@ class PlayingMoviesSlider extends StatelessWidget {
             options: CarouselOptions(autoPlay: true, enlargeCenterPage: true),
           );
         } else {
-          return const CircularProgressIndicator();
+          return Container(height: 0, width: 0);
         }
       },
     );
