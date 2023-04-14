@@ -18,7 +18,7 @@ Stream<List<Movie>> getMoviess() =>
         snapshot.docs.map((e) => Movie.fromJson(e.data())).toList());
 
 Stream<List<Movie>> getPlayingMovies() => FirebaseFirestore.instance
-    .collection("Movie")
+    .collection("Movie")  
     .where("release_date", isLessThanOrEqualTo: DateTime.now())
     .snapshots()
     .map((snapshot) =>
@@ -30,6 +30,41 @@ Stream<List<Movie>> getUpComingMovies() => FirebaseFirestore.instance
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((e) => Movie.fromJson(e.data())).toList());
+
+Future<List<Actor>> getActorOfMovie(String movieId) async
+{
+  CollectionReference actorCollection = FirebaseFirestore.instance.collection("Actor");
+  CollectionReference movieActorCollection = FirebaseFirestore.instance.collection("Movie_Actor");
+
+  QuerySnapshot actorQuerySnapshots = await actorCollection.get();
+  QuerySnapshot movieActorQuerySnapshots = await movieActorCollection.where("movie", isEqualTo: movieId).get();
+
+  List<MovieActor> movieActors = movieActorQuerySnapshots.docs.map((e) => MovieActor.fromJson(e.data() as Map<String, dynamic>)).toList();
+  List<Actor> actors = actorQuerySnapshots.docs.map((e) => Actor.fromJson(e.data() as Map<String, dynamic>)).toList(); 
+
+  List<Actor> actorsInMovie = [];
+  if(movieActors.isNotEmpty && actors.isNotEmpty)
+  {
+    for(Actor actor in actors)
+    {
+      if(checkActorInMovieActorList(actor, movieActors))
+      {
+        actorsInMovie.add(actor);
+      }
+    }
+  }
+  return actorsInMovie;
+}
+
+bool checkActorInMovieActorList(Actor actor, List<MovieActor> movieActors)
+{
+  if (movieActors.isEmpty) return false;
+  for(MovieActor movieActor in movieActors)
+  {
+    if (movieActor.actor == actor.id) return true;
+  }
+  return false;
+}
 
 class ImageFromUrl extends StatelessWidget {
   final String imageUrl;
