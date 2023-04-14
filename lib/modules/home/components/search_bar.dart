@@ -1,6 +1,5 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/modules/auth/welcome_page.dart';
 import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +47,6 @@ class SearchBar extends StatelessWidget {
           GestureDetector(
             onTap: () {
               FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => const WelcomePage(),
-                  ),
-                  (route) => false);
               toast('Đăng xuất thành công');
             },
             child: Container(

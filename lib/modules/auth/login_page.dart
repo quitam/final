@@ -1,13 +1,9 @@
-// ignore_for_file: unused_import
-
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/models/auth.dart';
+import 'package:final_project/services/auth.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/components/logo.dart';
-import 'package:final_project/modules/auth/welcome_page.dart';
-import 'package:final_project/modules/home/home_page.dart';
-import 'package:final_project/widgets/toast.dart';
+import 'package:final_project/modules/auth/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -101,18 +97,6 @@ class _LoginPageState extends State<LoginPage> {
             Center(
               child: BorderButton(
                   size: size,
-                  // onTap: () {
-                  //   if (_username == 'a' && _password == 'a') {
-                  //     toast('Đăng nhập thành công');
-                  //     Navigator.of(context).pushAndRemoveUntil(
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const MyHomePage(),
-                  //         ),
-                  //         (route) => false);
-                  //   } else {
-                  //     toast('Sai Email hoặc mật khẩu');
-                  //   }
-                  // },
                   onTap: () => handleLogin(),
                   text: 'Đăng nhập',
                   backgroundColor: (_username != '' && _password != '')
@@ -130,7 +114,13 @@ class _LoginPageState extends State<LoginPage> {
                   style: AppTextStyles.heading18,
                 ),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ));
+                    },
                     child: Text(
                       'Đăng ký',
                       style: AppTextStyles.heading18.copyWith(

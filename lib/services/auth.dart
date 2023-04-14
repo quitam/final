@@ -6,11 +6,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> registerWithEmailAndPassword(
-      String email, String password) async {
-    final user = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+      String email, String password, String fullName) async {
+    try {
+      final user = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await _auth.currentUser?.updateDisplayName(fullName);
+      toast('Tạo tài khoản thành công');
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          toast('Tài khoản đã tồn tại');
+          break;
+        case 'weak-password':
+          toast('Mật khẩu tối thiểu 6 ký tự');
+      }
+    }
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {

@@ -1,7 +1,5 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/modules/auth/loading_page.dart';
-import 'package:final_project/modules/auth/welcome_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,10 +9,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
-// void main() {
-//   runApp(const MyApp());
-// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -33,16 +27,17 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.darkerBackground,
           textTheme: Theme.of(context).textTheme.apply(
               bodyColor: AppColors.white, displayColor: AppColors.white)),
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const LoadingPage();
-          } else {
-            return const WelcomePage();
-          }
-        },
-      ),
+      // home: StreamBuilder<User?>(
+      //   stream: FirebaseAuth.instance.userChanges(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       return const MyHomePage();
+      //     } else {
+      //       return const WelcomePage();
+      //     }
+      //   },
+      // ),
+      home: const LoadingPage(),
     );
   }
 }

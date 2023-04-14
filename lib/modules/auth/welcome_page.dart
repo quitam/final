@@ -3,6 +3,7 @@ import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/components/logo.dart';
 import 'package:final_project/modules/auth/login_page.dart';
+import 'package:final_project/modules/auth/register_page.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -24,7 +25,7 @@ class WelcomePage extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   child: const Text(
                     'Welcome',
-                    style: AppTextStyles.heading28,
+                    style: AppTextStyles.heading32Bold,
                   ),
                 ),
                 Container(
@@ -44,8 +45,6 @@ class WelcomePage extends StatelessWidget {
                   child: BorderButton(
                     size: size,
                     onTap: () {
-                      // ignore: avoid_print
-                      print('Login');
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -60,15 +59,21 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                BorderButton(
-                  size: size,
-                  onTap: () {
-                    // ignore: avoid_print
-                    print('Sign up');
-                  },
-                  text: 'Đăng ký',
-                  backgroundColor: Colors.transparent,
-                  borderColor: AppColors.white,
+                Hero(
+                  tag: 'signup',
+                  child: BorderButton(
+                    size: size,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ));
+                    },
+                    text: 'Đăng ký',
+                    backgroundColor: Colors.transparent,
+                    borderColor: AppColors.white,
+                  ),
                 )
               ],
             )
