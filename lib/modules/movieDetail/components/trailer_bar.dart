@@ -1,66 +1,57 @@
-import 'package:final_project/config/themes/app_colors.dart';
-import 'package:final_project/models/test_models.dart';
-import 'package:flutter/material.dart';
+// import 'dart:ffi';
 
-class TrailerBar extends StatelessWidget {
+// import 'package:final_project/config/themes/app_colors.dart';
+// import 'dart:ffi';
+
+import 'package:final_project/models/models.dart';
+import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+class TrailerBar extends StatefulWidget {
   const TrailerBar({
     super.key,
-    required this.size,
+    required this.size, required this.movie,
   });
-
   final Size size;
+  final Movie movie;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      height: size.height / 5,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: trailers.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Stack(
-              children: [
-                Container(
-                  height: 160,
-                  width: 260,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(trailers[index].imagePath)),
-                  ),
-                ),
-                Container(
-                  height: 160,
-                  width: 260,
-                  decoration: const BoxDecoration(color: Colors.black26),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    //play this trailer
-                  },
-                  child: SizedBox(
-                    height: 160,
-                    width: 260,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 56),
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle, color: AppColors.blueMain),
-                      child: const Icon(
-                        Icons.play_arrow,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
+  State<TrailerBar> createState() => _TrailerBarState();
+}
+
+class _TrailerBarState extends State<TrailerBar> {
+  late YoutubePlayerController controller;
+
+  @override
+  void initState()
+  {
+    super.initState();
+    String url = widget.movie.trailer;
+    controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(url)!,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        loop: true,
+        mute: false
+      )
+    );
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: controller,
       ),
+      builder: (context, player){
+        return Padding(
+          padding: const EdgeInsets.only(),
+          child: SizedBox(
+            height: widget.size.height / 5,
+            child: player,
+          ),
+        );
+      },
     );
   }
 }
