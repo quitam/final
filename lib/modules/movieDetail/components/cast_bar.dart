@@ -1,5 +1,4 @@
 import 'package:final_project/funtion_library.dart';
-import 'package:final_project/models/test_models.dart';
 import 'package:final_project/models/models.dart';
 import 'package:final_project/modules/movieDetail/components/caster_item.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ class CastBar extends StatelessWidget {
             List<Actor> actors = snapshot.data!;
             return CasterItem(size: size, actors: actors);
           } else {
-            return Container(height: 0, width: 0);
+            return const SizedBox(height: 0, width: 0);
           }
         }),
       ),

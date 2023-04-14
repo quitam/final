@@ -28,16 +28,17 @@ class CasterItem extends StatelessWidget {
                 future: getImageUrl(actors[index].image),
                 builder: (context, snapshot) {
                   String image = snapshot.data ?? "";
-                  return image != "" ? Container(
-                    width: size.width / 4.5,
-                    height: size.width / 4.5,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(image),
-                        fit: BoxFit.scaleDown  
-                      ),
-                    ),
-                  ) : Container(height: 0, width: 0);
+                  return image != ""
+                      ? Container(
+                          width: size.width / 4.5,
+                          height: size.width / 4.5,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(image),
+                                fit: BoxFit.scaleDown),
+                          ),
+                        )
+                      : const SizedBox(height: 0, width: 0);
                 },
               ),
             ),

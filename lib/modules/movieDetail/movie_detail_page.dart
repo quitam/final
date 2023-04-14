@@ -78,7 +78,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                               ),
                             );
                           } else {
-                            return Container(height: 0, width: 0);
+                            return const SizedBox(height: 0, width: 0);
                           }
                         },
                       ),

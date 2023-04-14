@@ -68,7 +68,7 @@ class UpComing extends StatelessWidget {
             ),
           );
         } else {
-          return Container(height: 0, width: 0);
+          return const SizedBox(height: 0, width: 0);
         }
       },
     );
