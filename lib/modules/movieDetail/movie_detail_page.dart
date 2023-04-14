@@ -82,7 +82,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                         }
                       },
                     ),
-                    Expanded(
+                    Flexible(
                       child: Column(
                         children: [
                           Container(

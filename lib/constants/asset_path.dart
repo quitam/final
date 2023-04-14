@@ -31,5 +31,6 @@ class AssetPath {
   static const String trailer2 = '${imagePath}trailer2.png';
 
   static const String iconControl = '${iconPath}control.png';
+  static const String iconLogo = '${iconPath}logo.png';
   static const String screen = '${imagePath}screen.png';
 }

@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nhom19.tam_long.final_project">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
+        android:usesCleartextTraffic="true"
         android:label="final_project"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

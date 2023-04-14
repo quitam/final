@@ -1,5 +1,8 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/modules/auth/welcome_page.dart';
+import 'package:final_project/widgets/toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -34,7 +37,7 @@ class SearchBar extends StatelessWidget {
               ),
               Expanded(
                   child: TextField(
-                  decoration: InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Tìm tên phim',
                   hintStyle: AppTextStyles.hint15,
                   border: InputBorder.none,
@@ -44,8 +47,13 @@ class SearchBar extends StatelessWidget {
           )),
           GestureDetector(
             onTap: () {
-              // ignore: avoid_print
-              print('click');
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const WelcomePage(),
+                  ),
+                  (route) => false);
+              toast('Đăng xuất thành công');
             },
             child: Container(
               margin: const EdgeInsets.only(left: 16),

@@ -1,5 +1,7 @@
 import 'package:final_project/config/themes/app_colors.dart';
-import 'package:final_project/modules/home/home_page.dart';
+import 'package:final_project/modules/auth/loading_page.dart';
+import 'package:final_project/modules/auth/welcome_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,7 +33,16 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.darkerBackground,
           textTheme: Theme.of(context).textTheme.apply(
               bodyColor: AppColors.white, displayColor: AppColors.white)),
-      home: const MyHomePage(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const LoadingPage();
+          } else {
+            return const WelcomePage();
+          }
+        },
+      ),
     );
   }
 }
