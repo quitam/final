@@ -45,10 +45,7 @@ class SearchBar extends StatelessWidget {
             ]),
           )),
           GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              toast('Đăng xuất thành công');
-            },
+            onTap: () {},
             child: Container(
               margin: const EdgeInsets.only(left: 16),
               alignment: Alignment.center,
