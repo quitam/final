@@ -39,7 +39,7 @@ class MyHomePage extends StatelessWidget {
                     size: size,
                     onTap: () {
                       FirebaseAuth.instance.signOut();
-                      toast('Đăng xuất');
+                      toast('Đăng xuất thành công');
                     },
                     text: 'Đăng xuất',
                     backgroundColor: AppColors.blueMain,
