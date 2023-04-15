@@ -21,6 +21,10 @@ class Auth {
           break;
         case 'weak-password':
           toast('Mật khẩu tối thiểu 6 ký tự');
+          break;
+        case 'invalid-email':
+          toast('Email không đúng định dạng');
+          break;
       }
     }
   }

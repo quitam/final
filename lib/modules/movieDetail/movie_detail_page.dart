@@ -82,7 +82,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                           }
                         },
                       ),
-                      Expanded(
+                      Flexible(
                         child: Column(
                           children: [
                             Container(
@@ -167,7 +167,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                               const EdgeInsets.symmetric(horizontal: 20),
                         ),
                       ),
-                      Expanded(
+                      Flexible(
                         child: TabBarView(
                           controller: _tabController,
                           children: [

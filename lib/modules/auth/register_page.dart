@@ -2,6 +2,7 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/services/auth.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
+import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,17 +22,30 @@ class _RegisterPageState extends State<RegisterPage> {
   String _confirmPassword = '';
 
   handleSignup() async {
-    setState(() {
-      loading = true;
-    });
-    await Auth().registerWithEmailAndPassword(_username, _password, _fullName);
-    if (FirebaseAuth.instance.currentUser != null) {
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+    if (_fullName.length >= 6) {
+      if (_username.length >= 10) {
+        if (_password == _confirmPassword) {
+          setState(() {
+            loading = true;
+          });
+          await Auth()
+              .registerWithEmailAndPassword(_username, _password, _fullName);
+          if (FirebaseAuth.instance.currentUser != null) {
+            // ignore: use_build_context_synchronously
+            Navigator.pop(context);
+          }
+          setState(() {
+            loading = false;
+          });
+        } else {
+          toast('Mật khẩu không khớp');
+        }
+      } else {
+        toast('Email không đúng định dạng');
+      }
+    } else {
+      toast('Họ tên không hợp lệ');
     }
-    setState(() {
-      loading = false;
-    });
   }
 
   @override
@@ -126,7 +140,8 @@ class _RegisterPageState extends State<RegisterPage> {
             borderSide: const BorderSide(color: AppColors.blueMain)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.white)),
+            borderSide: BorderSide(
+                color: _fullName.length >= 6 ? Colors.green : Colors.red)),
       ),
     );
   }
@@ -146,7 +161,8 @@ class _RegisterPageState extends State<RegisterPage> {
             borderSide: const BorderSide(color: AppColors.blueMain)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.white)),
+            borderSide: BorderSide(
+                color: _username.length > 10 ? Colors.green : Colors.red)),
       ),
     );
   }
@@ -166,7 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
             borderSide: const BorderSide(color: AppColors.blueMain)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.white)),
+            borderSide: BorderSide(
+                color: _password.length >= 6 ? Colors.green : Colors.red)),
       ),
     );
   }
@@ -184,13 +201,17 @@ class _RegisterPageState extends State<RegisterPage> {
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
-                color: (_confirmPassword.isNotEmpty &&
-                        _confirmPassword != _password)
-                    ? Colors.red
-                    : Colors.green)),
+                color: (_confirmPassword.length >= 6 &&
+                        _confirmPassword == _password)
+                    ? Colors.green
+                    : Colors.red)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.white)),
+            borderSide: BorderSide(
+                color: (_confirmPassword.length >= 6 &&
+                        _confirmPassword == _password)
+                    ? Colors.green
+                    : Colors.red)),
       ),
     );
   }
