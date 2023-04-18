@@ -1,7 +1,7 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
-import 'package:final_project/modules/auth/welcome_page.dart';
+import 'package:final_project/modules/auth/loading_page.dart';
 import 'package:final_project/modules/home/components/category_bar.dart';
 import 'package:final_project/modules/home/components/current_playing.dart';
 import 'package:final_project/modules/home/components/header.dart';
@@ -40,10 +40,11 @@ class MyHomePage extends StatelessWidget {
                     size: size,
                     onTap: () {
                       FirebaseAuth.instance.signOut();
-                      // Navigator.of(context).pushAndRemoveUntil(
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const WelcomePage()),
-                      //     (route) => false);
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const LoadingPage()),
+                          (route) => false);
                       toast('Đăng xuất thành công');
                     },
                     text: 'Đăng xuất',
