@@ -56,6 +56,19 @@ Future<List<Actor>> getActorOfMovie(String movieId) async
   return actorsInMovie;
 }
 
+Future<List<String>> getAllMovieNames() async
+{
+  List<String> movieNames = [];
+  CollectionReference movieCollectionReference = FirebaseFirestore.instance.collection("Movie");
+  QuerySnapshot movieSnapshots = await movieCollectionReference.get();
+  List<Movie> movies = movieSnapshots.docs.map((e) => Movie.fromJson(e.data() as Map<String, dynamic>)).toList();
+  for(Movie tempMovie in movies)
+  {
+    movieNames.add(tempMovie.name);
+  }
+  return movieNames;
+}
+
 bool checkActorInMovieActorList(Actor actor, List<MovieActor> movieActors)
 {
   if (movieActors.isEmpty) return false;
