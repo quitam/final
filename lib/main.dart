@@ -27,16 +27,6 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.darkerBackground,
           textTheme: Theme.of(context).textTheme.apply(
               bodyColor: AppColors.white, displayColor: AppColors.white)),
-      // home: StreamBuilder<User?>(
-      //   stream: FirebaseAuth.instance.userChanges(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.hasData) {
-      //       return const MyHomePage();
-      //     } else {
-      //       return const WelcomePage();
-      //     }
-      //   },
-      // ),
       home: const LoadingPage(),
     );
   }
