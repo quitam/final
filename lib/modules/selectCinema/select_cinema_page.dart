@@ -2,7 +2,6 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
-import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/selectCinema/components/header.dart';
 import 'package:final_project/modules/selectSeat/select_seat_page.dart';
 import 'package:final_project/widgets/toast.dart';
@@ -37,19 +36,24 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
     return false;
   }
 
-  List<Screening> getScreeningsOfTheaterAndSelectedDate(Theater theater)
-  {
+  List<Screening> getScreeningsOfTheaterAndSelectedDate(Theater theater) {
     List<Screening> validScreenings = [];
-    for(Screening screening in screenings)
-    {
-      if(screening.theaterId == theater.id && screening.startTime.day == uniqueDatesOfScreenings[selectedDate].day) validScreenings.add(screening);
+    for (Screening screening in screenings) {
+      if (screening.theaterId == theater.id &&
+          screening.startTime.day == uniqueDatesOfScreenings[selectedDate].day)
+        validScreenings.add(screening);
     }
     return validScreenings;
   }
 
-  String getScreeningDuration(Screening screening)
-  {
-    return (screening.startTime.hour.toString() + ":" + screening.startTime.minute.toString() + " ~ " + screening.endTime.hour.toString() + ":" + screening.endTime.minute.toString());
+  String getScreeningDuration(Screening screening) {
+    return (screening.startTime.hour.toString() +
+        ":" +
+        screening.startTime.minute.toString() +
+        " ~ " +
+        screening.endTime.hour.toString() +
+        ":" +
+        screening.endTime.minute.toString());
   }
 
   @override
@@ -197,10 +201,13 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                 child: ListView.builder(
                     itemCount: theatersWithSelectedDateAndFilm.length,
                     itemBuilder: (BuildContext context, int index) {
-                      List<Screening> selectedTheaterScreenings = getScreeningsOfTheaterAndSelectedDate(theatersWithSelectedDateAndFilm[index]);
+                      List<Screening> selectedTheaterScreenings =
+                          getScreeningsOfTheaterAndSelectedDate(
+                              theatersWithSelectedDateAndFilm[index]);
                       return Column(
                         children: [
-                          buildTitle(theatersWithSelectedDateAndFilm[index].name),
+                          buildTitle(
+                              theatersWithSelectedDateAndFilm[index].name),
                           Container(
                             margin: const EdgeInsets.only(top: 8, bottom: 16),
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -227,7 +234,8 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                                         : AppColors.darkBackground,
                                   ),
                                   child: Text(
-                                    getScreeningDuration(selectedTheaterScreenings[index]),
+                                    getScreeningDuration(
+                                        selectedTheaterScreenings[index]),
                                     style: AppTextStyles.heading18,
                                   ),
                                 ),

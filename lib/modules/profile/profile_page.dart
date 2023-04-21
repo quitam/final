@@ -1,6 +1,5 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/constants/asset_path.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/loading_page.dart';
 import 'package:final_project/widgets/toast.dart';

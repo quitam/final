@@ -1,8 +1,6 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
-import 'package:final_project/models/models.dart';
-import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class TicketPage extends StatelessWidget {

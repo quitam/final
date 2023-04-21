@@ -1,5 +1,4 @@
 import 'package:final_project/config/themes/app_text_styles.dart';
-import 'package:final_project/constants/asset_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

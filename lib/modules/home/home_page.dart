@@ -4,7 +4,6 @@ import 'package:final_project/modules/home/components/current_playing.dart';
 import 'package:final_project/modules/home/components/header.dart';
 import 'package:final_project/modules/home/components/search_bar.dart';
 import 'package:final_project/modules/home/components/up_coming.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
