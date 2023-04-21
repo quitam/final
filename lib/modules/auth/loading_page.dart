@@ -1,7 +1,7 @@
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/modules/auth/components/logo.dart';
 import 'package:final_project/modules/auth/welcome_page.dart';
-import 'package:final_project/modules/home/home_page.dart';
+import 'package:final_project/modules/home/bottom_nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -20,7 +20,7 @@ class LoadingPage extends StatelessWidget {
               stream: FirebaseAuth.instance.userChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return const MyHomePage();
+                  return const BottomNav();
                 } else {
                   return const WelcomePage();
                 }

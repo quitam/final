@@ -37,99 +37,102 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const FaIcon(FontAwesomeIcons.arrowLeft),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const FaIcon(FontAwesomeIcons.arrowLeft),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Hero(tag: 'logo', child: Logo(boxSize: size.height / 9)),
-                const Padding(
-                  padding: EdgeInsets.only(left: 20),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Hero(tag: 'logo', child: Logo(boxSize: size.height / 9)),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      'Welcome back,\nMovie Lover!',
+                      style: AppTextStyles.heading20,
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: SizedBox(
+                  height: size.height * 0.1,
+                  width: size.height * 0.1,
+                  child: loading
+                      ? const Padding(
+                          padding: EdgeInsets.all(24),
+                          child: CircularProgressIndicator())
+                      : null,
+                ),
+              ),
+              const Center(
+                child: Hero(
+                  tag: 'login',
                   child: Text(
-                    'Welcome back,\nMovie Lover!',
-                    style: AppTextStyles.heading20,
+                    'Đăng nhập',
+                    style: AppTextStyles.heading32Bold,
                   ),
                 ),
-              ],
-            ),
-            Center(
-              child: SizedBox(
-                height: size.height * 0.1,
-                width: size.height * 0.1,
-                child: loading
-                    ? const Padding(
-                        padding: EdgeInsets.all(24),
-                        child: CircularProgressIndicator())
-                    : null,
               ),
-            ),
-            const Center(
-              child: Hero(
-                tag: 'login',
-                child: Text(
-                  'Đăng nhập',
-                  style: AppTextStyles.heading32Bold,
-                ),
+
+              //username
+              buildUsernameField(),
+
+              //password
+              buildPasswordField(),
+
+              //button login
+              Center(
+                child: BorderButton(
+                    size: size,
+                    onTap: () => handleLogin(),
+                    text: 'Đăng nhập',
+                    backgroundColor: (_username != '' && _password != '')
+                        ? AppColors.blueMain
+                        : AppColors.darkBackground,
+                    borderColor: (_username != '' && _password != '')
+                        ? AppColors.blueMain
+                        : AppColors.darkBackground),
               ),
-            ),
-
-            //username
-            buildUsernameField(),
-
-            //password
-            buildPasswordField(),
-
-            //button login
-            Center(
-              child: BorderButton(
-                  size: size,
-                  onTap: () => handleLogin(),
-                  text: 'Đăng nhập',
-                  backgroundColor: (_username != '' && _password != '')
-                      ? AppColors.blueMain
-                      : AppColors.darkBackground,
-                  borderColor: (_username != '' && _password != '')
-                      ? AppColors.blueMain
-                      : AppColors.darkBackground),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Nếu bạn chưa có tài khoản?',
-                  style: AppTextStyles.heading18,
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterPage(),
-                          ));
-                    },
-                    child: Text(
-                      'Đăng ký',
-                      style: AppTextStyles.heading18.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.lightBlue),
-                    ))
-              ],
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Nếu bạn chưa có tài khoản?',
+                    style: AppTextStyles.heading18,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterPage(),
+                            ));
+                      },
+                      child: Text(
+                        'Đăng ký',
+                        style: AppTextStyles.heading18.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.lightBlue),
+                      ))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
