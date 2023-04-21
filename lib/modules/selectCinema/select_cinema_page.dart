@@ -1,5 +1,6 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
 import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/selectCinema/components/header.dart';
@@ -21,6 +22,52 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
   int selectedTimeLot = -1;
   int selectedTimeCGV = -1;
   int selectedTimeBHD = -1;
+
+  late DateTime today;
+  List<Screening> screenings = [];
+  List<Screening> screeningsOfSelectedDateAndFilm = [];
+  List<DateTime> uniqueDatesOfScreenings = [];
+  List<Theater> theatersWithSelectedDateAndFilm = [];
+  List<Theater> allTheaters = [];
+
+  bool checkTheaterGroup(String id) {
+    for (Theater theater in theatersWithSelectedDateAndFilm) {
+      if (theater.groupId == id) return true;
+    }
+    return false;
+  }
+
+  List<Screening> getScreeningsOfTheaterAndSelectedDate(Theater theater)
+  {
+    List<Screening> validScreenings = [];
+    for(Screening screening in screenings)
+    {
+      if(screening.theaterId == theater.id && screening.startTime.day == uniqueDatesOfScreenings[selectedDate].day) validScreenings.add(screening);
+    }
+    return validScreenings;
+  }
+
+  String getScreeningDuration(Screening screening)
+  {
+    return (screening.startTime.hour.toString() + ":" + screening.startTime.minute.toString() + " ~ " + screening.endTime.hour.toString() + ":" + screening.endTime.minute.toString());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAllScreeningsOfMovie(widget.movie.id).then((value) {
+      setState(() {
+        screenings = value;
+        uniqueDatesOfScreenings = getUniqueScreeningDates(screenings);
+      });
+    });
+
+    getAllTheaters().then((value) {
+      setState(() {
+        allTheaters = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,159 +122,234 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                   )
                 ]),
               ),
-              buildTitle('Choose date'),
+
+              buildTitle('Chọn ngày'),
               //Date bar
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 height: size.height / 8,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: days.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedDate = index;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        height: size.height / 8,
-                        width: size.width / 5,
-                        decoration: BoxDecoration(
-                            color: selectedDate == index
-                                ? AppColors.blueMain
-                                : AppColors.darkBackground,
-                            borderRadius: BorderRadius.circular(14)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              days[index].day,
-                              style: AppTextStyles.heading28,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                days[index].dd.toString().padLeft(2, '0'),
-                                style: AppTextStyles.heading28,
+                child: uniqueDatesOfScreenings.isEmpty
+                    ? const SizedBox(
+                        height: 0,
+                        width: 0,
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: uniqueDatesOfScreenings.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedDate = index;
+                                List<String> uniqueTheaterIds =
+                                    getTheaterUniqueIdsFromScreeningsAndInDate(
+                                        screenings,
+                                        uniqueDatesOfScreenings[index]);
+                                uniqueTheaterIds.sort((a, b) => a.compareTo(b));
+                                theatersWithSelectedDateAndFilm =
+                                    getTheatersFromIds(
+                                        uniqueTheaterIds, allTheaters);
+
+                                print(theatersWithSelectedDateAndFilm.length);
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              height: size.height / 8,
+                              width: size.width / 5,
+                              decoration: BoxDecoration(
+                                  color: selectedDate == index
+                                      ? AppColors.blueMain
+                                      : AppColors.darkBackground,
+                                  borderRadius: BorderRadius.circular(14)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    daysOfWeek[
+                                        uniqueDatesOfScreenings[index].weekday -
+                                            1],
+                                    style: AppTextStyles.heading20,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      (uniqueDatesOfScreenings[index]
+                                              .day
+                                              .toString() +
+                                          " - " +
+                                          uniqueDatesOfScreenings[index]
+                                              .month
+                                              .toString()),
+                                      style: AppTextStyles.heading20,
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
 
-              buildTitle('Lotteria'),
-              //Time bar of Lotteria cinema
-              Container(
-                margin: const EdgeInsets.only(top: 8, bottom: 16),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                height: size.height / 15,
+              SizedBox(
+                height: 250,
                 child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: times.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTimeLot = index;
-                        selectedTimeBHD = -1;
-                        selectedTimeCGV = -1;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 14),
-                      alignment: Alignment.center,
-                      width: size.width / 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: selectedTimeLot == index
-                            ? AppColors.blueMain
-                            : AppColors.darkBackground,
-                      ),
-                      child: Text(
-                        times[index].time,
-                        style: AppTextStyles.heading20,
-                      ),
-                    ),
-                  ),
-                ),
+                    itemCount: theatersWithSelectedDateAndFilm.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      List<Screening> selectedTheaterScreenings = getScreeningsOfTheaterAndSelectedDate(theatersWithSelectedDateAndFilm[index]);
+                      return Column(
+                        children: [
+                          buildTitle(theatersWithSelectedDateAndFilm[index].name),
+                          Container(
+                            margin: const EdgeInsets.only(top: 8, bottom: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            height: size.height / 15,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: selectedTheaterScreenings.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedTimeLot = index;
+                                    selectedTimeBHD = -1;
+                                    selectedTimeCGV = -1;
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 14),
+                                  alignment: Alignment.center,
+                                  width: size.width / 3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: selectedTimeLot == index
+                                        ? AppColors.blueMain
+                                        : AppColors.darkBackground,
+                                  ),
+                                  child: Text(
+                                    getScreeningDuration(selectedTheaterScreenings[index]),
+                                    style: AppTextStyles.heading18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
               ),
 
-              buildTitle('CGV'),
-              //Time bar of CGV cinema
-              Container(
-                margin: const EdgeInsets.only(top: 8, bottom: 16),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                height: size.height / 15,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: times.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTimeLot = -1;
-                        selectedTimeBHD = -1;
-                        selectedTimeCGV = index;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 14),
-                      alignment: Alignment.center,
-                      width: size.width / 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: selectedTimeCGV == index
-                            ? AppColors.blueMain
-                            : AppColors.darkBackground,
-                      ),
-                      child: Text(
-                        times[index].time,
-                        style: AppTextStyles.heading20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // if (checkTheaterGroup("lotte")) buildTitle('Rạp Lotteria'),
 
-              buildTitle('BHD Star'),
-              //Time bar of CGV cinema
-              Container(
-                margin: const EdgeInsets.only(top: 8, bottom: 16),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                height: size.height / 15,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: times.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTimeLot = -1;
-                        selectedTimeBHD = index;
-                        selectedTimeCGV = -1;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 14),
-                      alignment: Alignment.center,
-                      width: size.width / 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: selectedTimeBHD == index
-                            ? AppColors.blueMain
-                            : AppColors.darkBackground,
-                      ),
-                      child: Text(
-                        times[index].time,
-                        style: AppTextStyles.heading20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // //Time bar of Lotteria cinema
+              // if (checkTheaterGroup("lotte"))
+              //   Container(
+              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
+              //     padding: const EdgeInsets.symmetric(horizontal: 20),
+              //     height: size.height / 15,
+              //     child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,
+              //       itemCount: times.length,
+              //       itemBuilder: (context, index) => GestureDetector(
+              //         onTap: () {
+              //           setState(() {
+              //             selectedTimeLot = index;
+              //             selectedTimeBHD = -1;
+              //             selectedTimeCGV = -1;
+              //           });
+              //         },
+              //         child: Container(
+              //           margin: const EdgeInsets.only(right: 14),
+              //           alignment: Alignment.center,
+              //           width: size.width / 4,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(14),
+              //             color: selectedTimeLot == index
+              //                 ? AppColors.blueMain
+              //                 : AppColors.darkBackground,
+              //           ),
+              //           child: Text(
+              //             times[index].time,
+              //             style: AppTextStyles.heading20,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+
+              // if (checkTheaterGroup("cgv")) buildTitle('Rạp CGV'),
+              // //Time bar of CGV cinema
+              // if (checkTheaterGroup("cgv"))
+              //   Container(
+              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
+              //     padding: const EdgeInsets.symmetric(horizontal: 20),
+              //     height: size.height / 15,
+              //     child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,
+              //       itemCount: times.length,
+              //       itemBuilder: (context, index) => GestureDetector(
+              //         onTap: () {
+              //           setState(() {
+              //             selectedTimeLot = -1;
+              //             selectedTimeBHD = -1;
+              //             selectedTimeCGV = index;
+              //           });
+              //         },
+              //         child: Container(
+              //           margin: const EdgeInsets.only(right: 14),
+              //           alignment: Alignment.center,
+              //           width: size.width / 4,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(14),
+              //             color: selectedTimeCGV == index
+              //                 ? AppColors.blueMain
+              //                 : AppColors.darkBackground,
+              //           ),
+              //           child: Text(
+              //             times[index].time,
+              //             style: AppTextStyles.heading20,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+
+              // if (checkTheaterGroup("bhd")) buildTitle('Rạp BHD Star'),
+              // //Time bar of CGV cinema
+              // if (checkTheaterGroup("bhd"))
+              //   Container(
+              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
+              //     padding: const EdgeInsets.symmetric(horizontal: 20),
+              //     height: size.height / 15,
+              //     child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,
+              //       itemCount: times.length,
+              //       itemBuilder: (context, index) => GestureDetector(
+              //         onTap: () {
+              //           setState(() {
+              //             selectedTimeLot = -1;
+              //             selectedTimeBHD = index;
+              //             selectedTimeCGV = -1;
+              //           });
+              //         },
+              //         child: Container(
+              //           margin: const EdgeInsets.only(right: 14),
+              //           alignment: Alignment.center,
+              //           width: size.width / 4,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(14),
+              //             color: selectedTimeBHD == index
+              //                 ? AppColors.blueMain
+              //                 : AppColors.darkBackground,
+              //           ),
+              //           child: Text(
+              //             times[index].time,
+              //             style: AppTextStyles.heading20,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
 
               //button next page
               Container(

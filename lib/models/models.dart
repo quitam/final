@@ -1,3 +1,4 @@
+
 class Genre {
   String id;
   String displayName;
@@ -82,4 +83,60 @@ class MovieActor
       movie: json["movie"],
       role: json["role"]
     );
+}
+
+class Screening
+{
+  String id;
+  String theaterId;
+  String filmId;
+  DateTime endTime;
+  DateTime startTime;
+  List<String> bookedSeats;
+
+  Screening({
+    required this.id,
+    required this.theaterId,
+    required this.filmId,
+    required this.endTime,
+    required this.startTime,
+    required this.bookedSeats
+  });
+
+  static Screening fromJson(Map<String, dynamic> json) => Screening(
+    id: json["id"],
+    theaterId: json["theater"],
+    filmId: json["film"],
+    endTime: json["end_time"].toDate(),
+    startTime: json["start_time"].toDate(),
+    bookedSeats: List<String>.from(json["booked"])
+  );
+}
+
+class Theater
+{
+  String id;
+  String groupId;
+  String name;
+  String address;
+  int seatRows;
+  int seatColumns;
+
+  Theater({
+    required this.id,
+    required this.groupId,
+    required this.name,
+    required this.address,
+    required this.seatRows,
+    required this.seatColumns
+  });
+
+   static Theater fromJson(Map<String, dynamic> json) => Theater(
+    id: json["id"],
+    groupId: json["group_id"],
+    name: json["name"],
+    address: json["address"],
+    seatRows: json["rows"],
+    seatColumns: json["columns"]
+  );
 }
