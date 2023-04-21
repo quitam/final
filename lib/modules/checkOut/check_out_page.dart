@@ -2,7 +2,7 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
-import 'package:final_project/modules/home/home_page.dart';
+import 'package:final_project/modules/home/bottom_nav.dart';
 import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:final_project/widgets/toast.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +136,7 @@ class CheckOutPage extends StatelessWidget {
                 toast('Thanh toán thành công');
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (context) => const MyHomePage(),
+                      builder: (context) => const BottomNav(),
                     ),
                     (route) => false);
               },
