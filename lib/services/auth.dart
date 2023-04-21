@@ -5,14 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<void> registerWithEmailAndPassword(
-      String email, String password, String fullName) async {
+  Future<void> registerWithEmailAndPassword(String email, String password,
+      String fullName, String urlDownload) async {
     try {
       final user = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: email.trim(),
+        password: password.trim(),
       );
       await _auth.currentUser?.updateDisplayName(fullName);
+      await _auth.currentUser?.updatePhotoURL(urlDownload);
+      _auth.signOut();
       toast('Tạo tài khoản thành công');
     } on FirebaseAuthException catch (e) {
       switch (e.code) {

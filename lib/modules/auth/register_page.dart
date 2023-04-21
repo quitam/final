@@ -1,9 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/constants/asset_path.dart';
+import 'package:final_project/modules/auth/login_page.dart';
 import 'package:final_project/services/auth.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,28 +23,62 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future selectImage() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) {
+      return;
+    }
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
   bool loading = false;
   String _fullName = '';
   String _username = '';
   String _password = '';
   String _confirmPassword = '';
 
-  handleSignup() async {
+  Future handleSignup() async {
     if (_fullName.length >= 6) {
       if (_username.length >= 10) {
         if (_password == _confirmPassword) {
-          setState(() {
-            loading = true;
-          });
-          await Auth()
-              .registerWithEmailAndPassword(_username, _password, _fullName);
-          if (FirebaseAuth.instance.currentUser != null) {
-            // ignore: use_build_context_synchronously
-            Navigator.pop(context);
+          if (pickedFile != null) {
+            setState(() {
+              loading = true;
+            });
+            final path = 'avatars/${pickedFile!.name}';
+            final file = File(pickedFile!.path!);
+            final ref = FirebaseStorage.instance.ref().child(path);
+            uploadTask = ref.putFile(file);
+
+            final snapshot = await uploadTask!.whenComplete(
+              () {},
+            );
+
+            final urlDownload = await snapshot.ref.getDownloadURL();
+
+            await Auth().registerWithEmailAndPassword(
+                _username, _password, _fullName, urlDownload);
+
+            // if (FirebaseAuth.instance.currentUser != null) {
+            //   Navigator.pop(context);
+            // }
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ));
+            setState(() {
+              loading = false;
+            });
+          } else {
+            toast('Vui lòng chọn ảnh');
           }
-          setState(() {
-            loading = false;
-          });
         } else {
           toast('Mật khẩu không khớp');
         }
@@ -70,11 +112,11 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             Center(
               child: SizedBox(
-                height: size.height * 0.1,
-                width: size.height * 0.1,
+                height: size.height * 0.07,
+                width: size.height * 0.07,
                 child: loading
                     ? const Padding(
-                        padding: EdgeInsets.all(24),
+                        padding: EdgeInsets.all(14),
                         child: CircularProgressIndicator())
                     : null,
               ),
@@ -88,6 +130,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ),
+            if (pickedFile != null)
+              Center(
+                child: GestureDetector(
+                  onTap: selectImage,
+                  child: CircleAvatar(
+                      radius: size.height / 20,
+                      backgroundImage: FileImage(File(pickedFile!.path!))),
+                ),
+              ),
+            Center(
+              child: ElevatedButton(
+                  onPressed: selectImage,
+                  child:
+                      Text(pickedFile != null ? 'Đổi avatar' : 'Chọn avatar')),
+            ),
+
             //fullname
             buildFullNameField(),
 

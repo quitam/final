@@ -12,7 +12,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     final Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -23,7 +22,6 @@ class MyHomePage extends StatelessWidget {
               children: [
                 //header
                 HomeHeader(size: size),
-                Text(user!.email.toString()),
                 //search bar
                 SearchBar(size: size),
                 //category bar

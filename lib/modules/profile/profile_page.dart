@@ -13,8 +13,10 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth.instance.currentUser?.reload();
     final Size size = MediaQuery.of(context).size;
     final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -24,10 +26,10 @@ class ProfilePage extends StatelessWidget {
               padding: const EdgeInsets.all(28),
               child: CircleAvatar(
                   radius: size.height / 15,
-                  backgroundImage: const AssetImage(AssetPath.imageProfile)),
+                  backgroundImage: NetworkImage(user!.photoURL.toString())),
             ),
             Text(
-              user!.displayName.toString(),
+              user.displayName.toString(),
               style: AppTextStyles.heading20,
             ),
             Padding(
