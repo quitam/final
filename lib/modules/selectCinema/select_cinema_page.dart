@@ -18,10 +18,15 @@ class SelectCinemaPage extends StatefulWidget {
 
 class _SelectCinemaPageState extends State<SelectCinemaPage> {
   int selectedDate = -1;
-  int selectedTimeLot = -1;
-  int selectedTimeCGV = -1;
-  int selectedTimeBHD = -1;
-
+  Screening selectedScreening = Screening(
+    id: "",
+    filmId: "",
+    theaterId: "",
+    endTime: DateTime.now(),
+    startTime: DateTime.now(),
+    price: 0,
+  );
+  late Theater selectedTheater;
   late DateTime today;
   List<Screening> screenings = [];
   List<Screening> screeningsOfSelectedDateAndFilm = [];
@@ -130,7 +135,7 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
               buildTitle('Chọn ngày'),
               //Date bar
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 height: size.height / 8,
                 child: uniqueDatesOfScreenings.isEmpty
                     ? const SizedBox(
@@ -153,14 +158,12 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                                 theatersWithSelectedDateAndFilm =
                                     getTheatersFromIds(
                                         uniqueTheaterIds, allTheaters);
-
-                                print(theatersWithSelectedDateAndFilm.length);
                               });
                             },
                             child: Container(
                               margin: const EdgeInsets.only(right: 10),
                               height: size.height / 8,
-                              width: size.width / 5,
+                              width: size.width / 4,
                               decoration: BoxDecoration(
                                   color: selectedDate == index
                                       ? AppColors.blueMain
@@ -196,208 +199,99 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                       ),
               ),
 
-              SizedBox(
-                height: 250,
-                child: ListView.builder(
-                    itemCount: theatersWithSelectedDateAndFilm.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      List<Screening> selectedTheaterScreenings =
-                          getScreeningsOfTheaterAndSelectedDate(
-                              theatersWithSelectedDateAndFilm[index]);
-                      return Column(
-                        children: [
-                          buildTitle(
-                              theatersWithSelectedDateAndFilm[index].name),
-                          Container(
-                            margin: const EdgeInsets.only(top: 8, bottom: 16),
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            height: size.height / 15,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: selectedTheaterScreenings.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedTimeLot = index;
-                                    selectedTimeBHD = -1;
-                                    selectedTimeCGV = -1;
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 14),
-                                  alignment: Alignment.center,
-                                  width: size.width / 3,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    color: selectedTimeLot == index
-                                        ? AppColors.blueMain
-                                        : AppColors.darkBackground,
-                                  ),
-                                  child: Text(
-                                    getScreeningDuration(
-                                        selectedTheaterScreenings[index]),
-                                    style: AppTextStyles.heading18,
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: theatersWithSelectedDateAndFilm.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        List<Screening> selectedTheaterScreenings =
+                            getScreeningsOfTheaterAndSelectedDate(
+                                theatersWithSelectedDateAndFilm[index]);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildMovieHeader(
+                                theatersWithSelectedDateAndFilm[index].name),
+                            buildText(
+                                theatersWithSelectedDateAndFilm[index].address),
+                            Container(
+                              margin: const EdgeInsets.only(top: 8, bottom: 25),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              height: size.height / 15,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: selectedTheaterScreenings.length,
+                                itemBuilder: (context, index2) =>
+                                    GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedScreening =
+                                          selectedTheaterScreenings[index2];
+                                      selectedTheater =
+                                          theatersWithSelectedDateAndFilm[
+                                              index];
+                                      print(selectedTheater.name);
+                                      print(selectedScreening.id);
+                                    });
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 14),
+                                    alignment: Alignment.center,
+                                    width: size.width / 3,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: selectedScreening.id ==
+                                              selectedTheaterScreenings[index2]
+                                                  .id
+                                          ? AppColors.blueMain
+                                          : AppColors.darkBackground,
+                                    ),
+                                    child: Text(
+                                      getScreeningDuration(
+                                          selectedTheaterScreenings[index2]),
+                                      style: AppTextStyles.heading18,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-
-              // if (checkTheaterGroup("lotte")) buildTitle('Rạp Lotteria'),
-
-              // //Time bar of Lotteria cinema
-              // if (checkTheaterGroup("lotte"))
-              //   Container(
-              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
-              //     padding: const EdgeInsets.symmetric(horizontal: 20),
-              //     height: size.height / 15,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemCount: times.length,
-              //       itemBuilder: (context, index) => GestureDetector(
-              //         onTap: () {
-              //           setState(() {
-              //             selectedTimeLot = index;
-              //             selectedTimeBHD = -1;
-              //             selectedTimeCGV = -1;
-              //           });
-              //         },
-              //         child: Container(
-              //           margin: const EdgeInsets.only(right: 14),
-              //           alignment: Alignment.center,
-              //           width: size.width / 4,
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(14),
-              //             color: selectedTimeLot == index
-              //                 ? AppColors.blueMain
-              //                 : AppColors.darkBackground,
-              //           ),
-              //           child: Text(
-              //             times[index].time,
-              //             style: AppTextStyles.heading20,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-
-              // if (checkTheaterGroup("cgv")) buildTitle('Rạp CGV'),
-              // //Time bar of CGV cinema
-              // if (checkTheaterGroup("cgv"))
-              //   Container(
-              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
-              //     padding: const EdgeInsets.symmetric(horizontal: 20),
-              //     height: size.height / 15,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemCount: times.length,
-              //       itemBuilder: (context, index) => GestureDetector(
-              //         onTap: () {
-              //           setState(() {
-              //             selectedTimeLot = -1;
-              //             selectedTimeBHD = -1;
-              //             selectedTimeCGV = index;
-              //           });
-              //         },
-              //         child: Container(
-              //           margin: const EdgeInsets.only(right: 14),
-              //           alignment: Alignment.center,
-              //           width: size.width / 4,
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(14),
-              //             color: selectedTimeCGV == index
-              //                 ? AppColors.blueMain
-              //                 : AppColors.darkBackground,
-              //           ),
-              //           child: Text(
-              //             times[index].time,
-              //             style: AppTextStyles.heading20,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-
-              // if (checkTheaterGroup("bhd")) buildTitle('Rạp BHD Star'),
-              // //Time bar of CGV cinema
-              // if (checkTheaterGroup("bhd"))
-              //   Container(
-              //     margin: const EdgeInsets.only(top: 8, bottom: 16),
-              //     padding: const EdgeInsets.symmetric(horizontal: 20),
-              //     height: size.height / 15,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemCount: times.length,
-              //       itemBuilder: (context, index) => GestureDetector(
-              //         onTap: () {
-              //           setState(() {
-              //             selectedTimeLot = -1;
-              //             selectedTimeBHD = index;
-              //             selectedTimeCGV = -1;
-              //           });
-              //         },
-              //         child: Container(
-              //           margin: const EdgeInsets.only(right: 14),
-              //           alignment: Alignment.center,
-              //           width: size.width / 4,
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(14),
-              //             color: selectedTimeBHD == index
-              //                 ? AppColors.blueMain
-              //                 : AppColors.darkBackground,
-              //           ),
-              //           child: Text(
-              //             times[index].time,
-              //             style: AppTextStyles.heading20,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
 
               //button next page
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 32),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (selectedTimeLot != -1 ||
-                        selectedTimeCGV != -1 ||
-                        selectedTimeBHD != -1) {
-                      if (selectedDate == -1) {
-                        toast('Vui lòng chọn ngày');
-                      } else {
-                        toast('Chọn ghế');
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectSeatPage(
-                                  movie: widget.movie,
-                                  cinema: selectedTimeLot != -1
-                                      ? 'Lotteria'
-                                      : (selectedTimeCGV != -1
-                                          ? 'CGV'
-                                          : 'BHD Star')),
-                            ));
-                      }
+                    if (selectedScreening.id != "") {
+                      toast('Chọn ghế');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SelectSeatPage(
+                              movie: widget.movie,
+                              screening: selectedScreening,
+                              theater: selectedTheater),
+                        ),
+                      );
                     } else {
-                      if (selectedDate == -1) {
-                        toast('Không được để trống thông tin');
-                      } else {
-                        toast('Vui lòng chọn rạp và giờ');
-                      }
+                      toast('Vui lòng chọn rạp và giờ');
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          (selectedDate != -1 && selectedTimeLot != -1 ||
-                                  selectedDate != -1 && selectedTimeCGV != -1 ||
-                                  selectedDate != -1 && selectedTimeBHD != -1)
-                              ? AppColors.blueMain
-                              : AppColors.darkBackground,
+                      backgroundColor: (selectedScreening.id != "")
+                          ? AppColors.blueMain
+                          : AppColors.darkBackground,
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(18)),
                   child: const Icon(
@@ -420,6 +314,26 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
         title,
         style: AppTextStyles.heading20
             .copyWith(fontStyle: FontStyle.italic, color: AppColors.grey),
+      ),
+    );
+  }
+
+  Container buildMovieHeader(String title) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      child: Text(title, style: AppTextStyles.heading20),
+    );
+  }
+
+  Container buildText(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      child: Text(
+        text,
+        style: AppTextStyles.normal16
+            .copyWith(fontStyle: FontStyle.italic, color: AppColors.grey),
+        maxLines: 1,
+        overflow: TextOverflow.clip,
       ),
     );
   }

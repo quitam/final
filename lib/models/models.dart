@@ -92,7 +92,7 @@ class Screening
   String filmId;
   DateTime endTime;
   DateTime startTime;
-  List<String> bookedSeats;
+  int price;
 
   Screening({
     required this.id,
@@ -100,7 +100,7 @@ class Screening
     required this.filmId,
     required this.endTime,
     required this.startTime,
-    required this.bookedSeats
+    required this.price,
   });
 
   static Screening fromJson(Map<String, dynamic> json) => Screening(
@@ -109,7 +109,7 @@ class Screening
     filmId: json["film"],
     endTime: json["end_time"].toDate(),
     startTime: json["start_time"].toDate(),
-    bookedSeats: List<String>.from(json["booked"])
+    price: json["price"],
   );
 }
 
@@ -138,5 +138,27 @@ class Theater
     address: json["address"],
     seatRows: json["rows"],
     seatColumns: json["columns"]
+  );
+}
+
+class Ticket
+{
+  String id;
+  String screeningId;
+  String userId;
+  String seat;
+
+  Ticket({
+    required this.id,
+    required this.screeningId,
+    required this.userId,
+    required this.seat
+  });
+
+  static Ticket fromJson(Map<String, dynamic> json) => Ticket(
+    id: json["id"],
+    screeningId: json["screening"],
+    userId: json["user"],
+    seat: json["seat"]
   );
 }

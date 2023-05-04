@@ -7,14 +7,34 @@ import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:final_project/widgets/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class CheckOutPage extends StatelessWidget {
-  final String cinema;
   final Movie movie;
-  const CheckOutPage({super.key, required this.movie, required this.cinema});
+  final Theater theater;
+  final Screening screening;
+  final List<String> seatsToCheckOut;
+  const CheckOutPage(
+      {super.key,
+      required this.movie,
+      required this.theater,
+      required this.screening,
+      required this.seatsToCheckOut});
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('EEEE, MMM d, yyyy').format(screening.startTime);
+    String formattedTime = DateFormat('h:mm a').format(screening.startTime);
+    String seatsAsString = "";
+    String price = screening.price.toString() + " x" + seatsToCheckOut.length.toString();
+    String totalPrice = (seatsToCheckOut.length * screening.price).toString() + " VND";
+
+    for(String tempSeat in seatsToCheckOut)
+    {
+      seatsAsString = "$seatsAsString $tempSeat";
+    }
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -121,14 +141,15 @@ class CheckOutPage extends StatelessWidget {
             child: Column(
               children: [
                 buildPriceDetail('ID', '11012001'),
-                buildPriceDetail('Rạp', cinema),
-                buildPriceDetail('Ngày và giờ', '13 September,  13:00'),
-                buildPriceDetail('Số ghế', 'A1, A2, A3'),
-                buildPriceDetail('Giá', '79.000 x3'),
+                buildPriceDetail('Rạp', theater.name),
+                buildPriceDetail(
+                    'Ngày và giờ', '$formattedDate at $formattedTime'),
+                buildPriceDetail('Số ghế', seatsAsString),
+                buildPriceDetail('Giá', price),
               ],
             ),
           ),
-          buildTotalPrice('237 000 VND'),
+          buildTotalPrice(totalPrice),
           Expanded(
               child: Center(
             child: GestureDetector(
@@ -168,11 +189,11 @@ class CheckOutPage extends StatelessWidget {
         children: [
           const Text(
             'Tổng:',
-            style: AppTextStyles.heading20,
+            style: AppTextStyles.heading18,
           ),
           Text(
             content,
-            style: AppTextStyles.heading20.copyWith(
+            style: AppTextStyles.heading18.copyWith(
                 color: AppColors.blueMain, fontWeight: FontWeight.bold),
           )
         ],
@@ -189,11 +210,12 @@ class CheckOutPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.heading18,
+            style: AppTextStyles.normal16,
           ),
           Text(
             detail,
-            style: AppTextStyles.heading18,
+            style: AppTextStyles.normal16,
+            overflow: TextOverflow.clip,
           )
         ],
       ),
