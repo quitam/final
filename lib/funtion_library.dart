@@ -196,3 +196,16 @@ List<Theater> getTheatersFromIds(List<String> ids, List<Theater> theaters) {
   }
   return validTheaters;
 }
+
+Future<List<Ticket>> getAllTicketsOfScreening(String screeningId) async
+{
+  List<Ticket> tickets = [];
+
+  CollectionReference ticketCollection =
+      FirebaseFirestore.instance.collection("Ticket");
+  QuerySnapshot ticketQuery = await ticketCollection.where("screening", isEqualTo: screeningId).get();
+  tickets = ticketQuery.docs
+      .map((e) => Ticket.fromJson(e.data() as Map<String, dynamic>))
+      .toList();
+  return tickets;
+}

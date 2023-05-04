@@ -156,5 +156,5 @@ List<Trailer> trailers = [
   Trailer("Trailer 1", AssetPath.trailer2),
 ];
 
-List seatRow = ['A', 'B', 'C', 'D', 'E'].reversed.toList();
-List seatNumber = [1, 2, 3, 4, 5, 6];
+List seatRow = ['A', 'B', 'C', 'D', 'E', 'F', 'G'].reversed.toList();
+List seatNumber = [1, 2, 3, 4, 5, 6, 7];
