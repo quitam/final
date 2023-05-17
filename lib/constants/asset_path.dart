@@ -30,7 +30,10 @@ class AssetPath {
   static const String trailer1 = '${imagePath}trailer1.png';
   static const String trailer2 = '${imagePath}trailer2.png';
 
-  static const String iconControl = '${iconPath}control.png';
-  static const String iconLogo = '${iconPath}logo.png';
   static const String screen = '${imagePath}screen.png';
+
+  //icon
+  static const String iconLogo = '${iconPath}logo.png';
+  static const String facebookButton = '${iconPath}facebook_button.png';
+  static const String googleButton = '${iconPath}google_button.png';
 }

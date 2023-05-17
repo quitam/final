@@ -6,6 +6,7 @@ import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -15,6 +16,7 @@ class ProfilePage extends StatelessWidget {
     FirebaseAuth.instance.currentUser?.reload();
     final Size size = MediaQuery.of(context).size;
     final user = FirebaseAuth.instance.currentUser;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
     return Scaffold(
       body: Center(
@@ -126,15 +128,53 @@ class ProfilePage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 100),
               child: BorderButton(
                   size: size,
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
+                  // onTap: () {
+                  //   FirebaseAuth.instance.signOut();
+                  //   googleSignIn.signOut();
 
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const LoadingPage()),
-                        (route) => false);
-                    toast('Đăng xuất thành công');
-                  },
+                  //   Navigator.of(context).pushAndRemoveUntil(
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const LoadingPage()),
+                  //       (route) => false);
+                  //   toast('Đăng xuất thành công');
+                  // },
+                  onTap: () => showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          backgroundColor: AppColors.darkGrey,
+                          title: Text(
+                            'Đăng xuất',
+                            style: AppTextStyles.heading20
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          content: const Text(
+                              'Bạn có chắc muốn đăng xuất khỏi ứng dụng?',
+                              style: AppTextStyles.heading18),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Hủy'),
+                              child: const Text(
+                                'Hủy',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                FirebaseAuth.instance.signOut();
+                                googleSignIn.signOut();
+
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoadingPage()),
+                                    (route) => false);
+                                toast('Đăng xuất thành công');
+                              },
+                              child: const Text('Đăng xuất'),
+                            ),
+                          ],
+                        ),
+                      ),
                   text: 'Đăng xuất',
                   backgroundColor: AppColors.blueMain,
                   borderColor: AppColors.blueMain),

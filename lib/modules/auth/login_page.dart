@@ -1,9 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/constants/asset_path.dart';
 import 'package:final_project/services/auth.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/components/logo.dart';
 import 'package:final_project/modules/auth/register_page.dart';
+import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,6 +29,20 @@ class _LoginPageState extends State<LoginPage> {
       loading = true;
     });
     await Auth().signInWithEmailAndPassword(_username, _password);
+    if (FirebaseAuth.instance.currentUser != null) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    }
+    setState(() {
+      loading = false;
+    });
+  }
+
+  googleLogin() async {
+    setState(() {
+      loading = true;
+    });
+    await Auth().signInWithGoogle();
     if (FirebaseAuth.instance.currentUser != null) {
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
@@ -70,11 +88,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Center(
                 child: SizedBox(
-                  height: size.height * 0.1,
-                  width: size.height * 0.1,
+                  height: size.height * 0.05,
+                  width: size.height * 0.05,
                   child: loading
                       ? const Padding(
-                          padding: EdgeInsets.all(24),
+                          padding: EdgeInsets.all(12),
                           child: CircularProgressIndicator())
                       : null,
                 ),
@@ -130,6 +148,31 @@ class _LoginPageState extends State<LoginPage> {
                             color: AppColors.lightBlue),
                       ))
                 ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => googleLogin(),
+                      child: Image.asset(
+                        AssetPath.googleButton,
+                        scale: 1.1,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        print('login with facebook');
+                        toast('Cooming soon');
+                      },
+                      child: Image.asset(
+                        AssetPath.facebookButton,
+                        scale: 1.1,
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
           ),

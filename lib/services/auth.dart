@@ -2,9 +2,24 @@
 
 import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<void> signInWithGoogle() async {
+    GoogleSignInAccount? user = await _googleSignIn.signIn();
+    GoogleSignInAuthentication gAuth = await user!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+    await _auth.signInWithCredential(credential);
+    await _auth.currentUser?.reload();
+    toast('Đăng nhập thành công');
+  }
+
   Future<void> registerWithEmailAndPassword(String email, String password,
       String fullName, String urlDownload) async {
     try {

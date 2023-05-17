@@ -27,11 +27,10 @@ class CheckOutPage extends StatelessWidget {
         DateFormat('EEEE, MMM d, yyyy').format(screening.startTime);
     String formattedTime = DateFormat('h:mm a').format(screening.startTime);
     String seatsAsString = "";
-    String price = screening.price.toString() + " x" + seatsToCheckOut.length.toString();
-    String totalPrice = (seatsToCheckOut.length * screening.price).toString() + " VND";
+    String price = "${screening.price} x${seatsToCheckOut.length}";
+    String totalPrice = "${seatsToCheckOut.length * screening.price} VND";
 
-    for(String tempSeat in seatsToCheckOut)
-    {
+    for (String tempSeat in seatsToCheckOut) {
       seatsAsString = "$seatsAsString $tempSeat";
     }
 

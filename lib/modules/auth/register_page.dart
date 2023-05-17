@@ -110,11 +110,11 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             Center(
               child: SizedBox(
-                height: size.height * 0.07,
-                width: size.height * 0.07,
+                height: size.height * 0.05,
+                width: size.height * 0.05,
                 child: loading
                     ? const Padding(
-                        padding: EdgeInsets.all(14),
+                        padding: EdgeInsets.all(12),
                         child: CircularProgressIndicator())
                     : null,
               ),
