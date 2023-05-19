@@ -267,19 +267,18 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                                           IconButton(
                                             icon: Icon(Icons.send, color:Colors.white70),
                                             onPressed:() {
-                                              addMovie(
-                                                  "nguoi_nhen_du_hanh_vu_tru_nhen", 
-                                                  "Người Nhện Du hành Vũ trụ Nhện", 
-                                                  125, 
-                                                  "https://youtu.be/HVgwRbQfpCc", 
-                                                  ["fiction", "cartoon", "action", "adventure"],
-                                                  "Sau khi gặp lại Gwen Stacy, chàng Spider-Man thân thiện đến từ Brooklyn phải du hành qua đa vũ trụ và gặp một nhóm Người Nhện chịu trách nhiệm bảo vệ các thế giới song song. Nhưng khi nhóm siêu anh hùng xung đột về cách xử lý một mối đe dọa mới, Miles buộc phải đọ sức với các Người Nhện khác và phải xác định lại ý nghĩa của việc trở thành một người hùng để có thể cứu những người cậu yêu thương nhất."
-                                                );
+                                              // addMovie(
+                                              //     "mat_na_quy", 
+                                              //     "Mặt Nạ Quỷ", 
+                                              //     62, 
+                                              //     "https://youtu.be/3MKRzG9k76Q", 
+                                              //     ["horror", "thriller"],
+                                              //     "Bí ẩn về cái chết của em gái Evie 20 năm trước còn bỏ ngỏ, vào lúc 09:09 hằng đêm, hàng loạt cuộc chạm trán kinh hoàng xảy ra. Liệu Margot có biết được sự thật ai là kẻ giết em gái mình?"
+                                              //   );
                                               if(commentController.text.isNotEmpty)
                                               {
-                                                // addNewComment(widget.movie.id, commentController.text);
-                                                // commentController.clear();
-                                                
+                                                addNewComment(widget.movie.id, commentController.text);
+                                                commentController.clear();
                                               }
                                             },
                                           ),
