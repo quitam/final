@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
@@ -45,20 +47,16 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
     List<Screening> validScreenings = [];
     for (Screening screening in screenings) {
       if (screening.theaterId == theater.id &&
-          screening.startTime.day == uniqueDatesOfScreenings[selectedDate].day)
+          screening.startTime.day ==
+              uniqueDatesOfScreenings[selectedDate].day) {
         validScreenings.add(screening);
+      }
     }
     return validScreenings;
   }
 
   String getScreeningDuration(Screening screening) {
-    return (screening.startTime.hour.toString() +
-        ":" +
-        screening.startTime.minute.toString() +
-        " ~ " +
-        screening.endTime.hour.toString() +
-        ":" +
-        screening.endTime.minute.toString());
+    return ("${screening.startTime.hour}:${screening.startTime.minute} ~ ${screening.endTime.hour}:${screening.endTime.minute}");
   }
 
   @override
@@ -181,13 +179,7 @@ class _SelectCinemaPageState extends State<SelectCinemaPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Text(
-                                      (uniqueDatesOfScreenings[index]
-                                              .day
-                                              .toString() +
-                                          " - " +
-                                          uniqueDatesOfScreenings[index]
-                                              .month
-                                              .toString()),
+                                      ("${uniqueDatesOfScreenings[index].day} - ${uniqueDatesOfScreenings[index].month}"),
                                       style: AppTextStyles.heading20,
                                     ),
                                   )

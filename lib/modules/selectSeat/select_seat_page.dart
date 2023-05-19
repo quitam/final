@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/constants/asset_path.dart';
@@ -36,7 +38,7 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
 
   String calculateTotalPrice() {
     String price = "";
-    price = (widget.screening.price * selectedSeats.length).toString() + " đ";
+    price = "${widget.screening.price * selectedSeats.length} đ";
     return price;
   }
 
@@ -229,14 +231,17 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (selectedSeats.length == 0) {
+                          if (selectedSeats.isEmpty) {
                             toast("Bạn chưa chọn ghế");
                           } else {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CheckOutPage(
-                                      movie: widget.movie, theater: widget.theater, screening: widget.screening, seatsToCheckOut: selectedSeats),
+                                      movie: widget.movie,
+                                      theater: widget.theater,
+                                      screening: widget.screening,
+                                      seatsToCheckOut: selectedSeats),
                                 ));
                           }
                         },
