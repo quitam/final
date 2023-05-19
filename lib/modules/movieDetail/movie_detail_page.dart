@@ -267,10 +267,19 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                                           IconButton(
                                             icon: Icon(Icons.send, color:Colors.white70),
                                             onPressed:() {
+                                              addMovie(
+                                                  "nguoi_nhen_du_hanh_vu_tru_nhen", 
+                                                  "Người Nhện Du hành Vũ trụ Nhện", 
+                                                  125, 
+                                                  "https://youtu.be/HVgwRbQfpCc", 
+                                                  ["fiction", "cartoon", "action", "adventure"],
+                                                  "Sau khi gặp lại Gwen Stacy, chàng Spider-Man thân thiện đến từ Brooklyn phải du hành qua đa vũ trụ và gặp một nhóm Người Nhện chịu trách nhiệm bảo vệ các thế giới song song. Nhưng khi nhóm siêu anh hùng xung đột về cách xử lý một mối đe dọa mới, Miles buộc phải đọ sức với các Người Nhện khác và phải xác định lại ý nghĩa của việc trở thành một người hùng để có thể cứu những người cậu yêu thương nhất."
+                                                );
                                               if(commentController.text.isNotEmpty)
                                               {
-                                                addNewComment(widget.movie.id, commentController.text);
-                                                commentController.clear();
+                                                // addNewComment(widget.movie.id, commentController.text);
+                                                // commentController.clear();
+                                                
                                               }
                                             },
                                           ),
@@ -279,6 +288,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                                     ),
                                     ListView.builder(
                                       shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
                                       scrollDirection: Axis.vertical,
                                       itemCount: comments.length,
                                       itemBuilder: (context, index) {
@@ -356,11 +366,34 @@ bool addNewComment(String movieId, String content) {
     'user': FirebaseAuth.instance.currentUser?.uid,
     'movie': movieId,
     'content': content,
+    'user_name': FirebaseAuth.instance.currentUser?.displayName
   };
   bool result = true;
   commentDoc.set(comment).then((value) {}).catchError((error) {
     result = false;
-    print("Khong the them document cho ticket voi loi: $error");
+    print("Khong the them document cho comment voi loi: $error");
+  });
+  return result;
+}
+
+bool addMovie(String id, String name, int duration, String trailer, List<String> genres, String synopsis){
+   DocumentReference commentDoc =
+      FirebaseFirestore.instance.collection("Movie").doc(id);
+  Map<String, dynamic> comment = {
+    "id": id,
+    "poster_image": "posters/" + id + "_poster.png",
+    "banner_image": "banners/" + id + "_banner.png",
+    "name": name,
+    "duration": duration,
+    "trailer": trailer,
+    "release_date": Timestamp.fromDate(DateTime.now()),
+    "genres": List<dynamic>.from(genres), 
+    "synopsis": synopsis
+  };
+  bool result = true;
+  commentDoc.set(comment).then((value) {}).catchError((error) {
+    result = false;
+    print("Khong the them document cho comment voi loi: $error");
   });
   return result;
 }

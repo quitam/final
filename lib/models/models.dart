@@ -171,16 +171,19 @@ class Comment
   String userId;
   String movieId;
   String content;
+  String userName;
 
   Comment({
     required this.userId,
     required this.movieId,
     required this.content,
+    required this.userName,
   });
 
   static Comment fromJson(Map<String, dynamic> json) => Comment(
     userId: json["user"],
     movieId: json["movie"],
     content: json["content"],
+    userName: json["user_name"]
   );
 }
