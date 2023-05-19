@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -27,16 +28,18 @@ Stream<List<Movie>> getMoviess() =>
     FirebaseFirestore.instance.collection("Movie").snapshots().map((snapshot) =>
         snapshot.docs.map((e) => Movie.fromJson(e.data())).toList());
 
-Stream<List<Movie>> getPlayingMovies() => FirebaseFirestore.instance
+Stream<List<Movie>> getMax5CurrentPlayingMovies() => FirebaseFirestore.instance
     .collection("Movie")
     .where("release_date", isLessThanOrEqualTo: DateTime.now())
+    .limit(5)
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((e) => Movie.fromJson(e.data())).toList());
 
-Stream<List<Movie>> getUpComingMovies() => FirebaseFirestore.instance
+Stream<List<Movie>> getMax5UpComingMovies() => FirebaseFirestore.instance
     .collection("Movie")
     .where("release_date", isGreaterThan: DateTime.now())
+    .limit(5)
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((e) => Movie.fromJson(e.data())).toList());
@@ -97,7 +100,7 @@ Future<List<String>> getAllGenre() async {
   return genreNames;
 }
 
-Future<List<Movie>> getAllMovie() async {
+Future<List<Movie>> getAllMovies() async {
   CollectionReference movieCollectionReference =
       FirebaseFirestore.instance.collection("Movie");
   QuerySnapshot movieSnapshots = await movieCollectionReference.get();
@@ -286,4 +289,32 @@ Future<List<Ticket>> getUserTickets(String userId) async {
       .map((e) => Ticket.fromJson(e.data() as Map<String, dynamic>))
       .toList();
   return tickets;
+}
+
+Future<List<Comment>> getCommentsOfMovie(String movieId) async
+{
+  List<Comment> comments = [];
+  CollectionReference commentCollection =
+      FirebaseFirestore.instance.collection("Comment");
+  QuerySnapshot commentQuery = await commentCollection.where("movie", isEqualTo: movieId).get();
+  comments = commentQuery.docs
+      .map((e) => Comment.fromJson(e.data() as Map<String, dynamic>))
+      .toList();
+  return comments;
+}
+
+Future<User?> getUserById(String userId) async {
+  try {
+    User? user = await FirebaseAuth.instance.userChanges().first;
+    if (user != null && user.uid == userId) {
+      return user;
+    } else {
+      // User not found or not currently signed in
+      return null;
+    }
+  } catch (e) {
+    // Error occurred while retrieving user data
+    print('Error: $e');
+    return null;
+  }
 }

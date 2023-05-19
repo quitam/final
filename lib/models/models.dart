@@ -165,3 +165,22 @@ class Ticket
     seat: json["seat"], 
   );
 }
+
+class Comment
+{
+  String userId;
+  String movieId;
+  String content;
+
+  Comment({
+    required this.userId,
+    required this.movieId,
+    required this.content,
+  });
+
+  static Comment fromJson(Map<String, dynamic> json) => Comment(
+    userId: json["user"],
+    movieId: json["movie"],
+    content: json["content"],
+  );
+}

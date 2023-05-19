@@ -43,7 +43,7 @@ class _SearchBarState extends State<SearchBar> {
         movieNames = list;
       });
     });
-    getAllMovie().then((list) {
+    getAllMovies().then((list) {
       setState(() {
         listMovies = list;
       });

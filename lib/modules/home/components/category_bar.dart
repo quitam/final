@@ -22,7 +22,7 @@ class _CategoryBarState extends State<CategoryBar> {
   @override
   void initState() {
     super.initState();
-    getAllMovie().then((value) {
+    getAllMovies().then((value){
       setState(() {
         allMovies = value;
       });
@@ -56,6 +56,9 @@ class _CategoryBarState extends State<CategoryBar> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
+                    setState(() {
+                      selectedTab = index;
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(
