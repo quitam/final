@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
+import 'package:final_project/modules/movieDetail/components/comment.dart';
 import 'package:final_project/modules/movieDetail/components/fa_button.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
 import 'package:final_project/modules/movieDetail/components/trailer_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,11 +28,56 @@ class MovieDetailPage extends StatefulWidget {
 class _MovieDetailPageState extends State<MovieDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Comment> comments = [];
+  List<String> uniqueUserId = [];
+  List<User?> users = [];
+  TextEditingController commentController = TextEditingController();
+  bool displayPaymentButton = false;
+
+
+  User? getCommentUser(Comment comment) {
+    for (User? tempUser in users) {
+      if (tempUser!.uid == comment.userId) {
+        return tempUser;
+      }
+    }
+  }
+
+  void getUniqueUserId() {
+    for (Comment tempComment in comments) {
+      if (!uniqueUserId.contains(tempComment.userId)) {
+        uniqueUserId.add(tempComment.userId);
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    if(widget.isPlaying) displayPaymentButton = true;
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        
+      });
+    },);
+    getCommentsOfMovie(widget.movie.id).then(
+      (value) => {
+        setState(
+          () {
+            comments = value;
+            getUniqueUserId();
+            for (String userId in uniqueUserId) {
+              getUserById(userId).then((value) {
+                setState(() {
+                  users.add(value);
+                });
+              });
+            }
+          },
+        )
+      },
+    );
   }
 
   @override
@@ -38,7 +86,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildAppBar(context),
-      floatingActionButton: widget.isPlaying ? FAButton(widget: widget) : null,
+      floatingActionButton:  (widget.isPlaying && _tabController.index == 0) ? FAButton(widget: widget) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
         child: Stack(
@@ -190,9 +238,56 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                               ],
                             ),
                             Container(
-                              alignment: Alignment.center,
-                              child: const Text('Đánh giá'),
-                            )
+                                alignment: Alignment.center,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(FirebaseAuth.instance.currentUser?.photoURL ?? ""),
+                                            radius: 20,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: TextFormField(
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                              controller: commentController,
+                                              decoration: const InputDecoration(
+                                                hintText: 'Nhập bình luận',
+                                                hintStyle: TextStyle(color: Colors.white24)
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          IconButton(
+                                            icon: Icon(Icons.send, color:Colors.white70),
+                                            onPressed:() {
+                                              if(commentController.text.isNotEmpty)
+                                              {
+                                                addNewComment(widget.movie.id, commentController.text);
+                                                commentController.clear();
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: comments.length,
+                                      itemBuilder: (context, index) {
+                                        return CommentWidget(
+                                            comment: comments[index]);
+                                      },
+                                    ),
+                                  ],
+                                ))
                           ],
                         ),
                       )
@@ -252,4 +347,20 @@ String getGenreDisplayName(String id, List<Genre> genres) {
     }
   }
   return "";
+}
+
+bool addNewComment(String movieId, String content) {
+  DocumentReference commentDoc =
+      FirebaseFirestore.instance.collection("Comment").doc();
+  Map<String, dynamic> comment = {
+    'user': FirebaseAuth.instance.currentUser?.uid,
+    'movie': movieId,
+    'content': content,
+  };
+  bool result = true;
+  commentDoc.set(comment).then((value) {}).catchError((error) {
+    result = false;
+    print("Khong the them document cho ticket voi loi: $error");
+  });
+  return result;
 }

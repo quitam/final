@@ -15,7 +15,7 @@ class PlayingMoviesSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: getPlayingMovies(),
+      stream: getMax5CurrentPlayingMovies(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final playingMovies = snapshot.data!;

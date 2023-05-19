@@ -20,7 +20,7 @@ class HomeHeader extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           const Text(
-            'Find your best\nmovie',
+            'Lựa chọn phim\nyêu thích',
             style: AppTextStyles.heading32Bold,
           ),
           CircleAvatar(

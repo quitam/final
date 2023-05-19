@@ -15,7 +15,7 @@ class UpComing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: getUpComingMovies(),
+      stream: getMax5UpComingMovies(),
       builder: (context, snapshot) {
         if (snapshot.hasData && !snapshot.hasError) {
           final upcomingMovies = snapshot.data!;
