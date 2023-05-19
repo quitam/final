@@ -2,7 +2,6 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
-import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieFilter/movie_filter.dart';
 
 import 'package:flutter/material.dart';
@@ -21,24 +20,21 @@ class _CategoryBarState extends State<CategoryBar> {
   List<Movie> allMovies = [];
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    getAllMovie().then((value){
+    getAllMovie().then((value) {
       setState(() {
         allMovies = value;
       });
     });
   }
 
-  List<Movie> getMoviesOfGenre(String genreId)
-  {
-    if(genreId == "all") return allMovies;
+  List<Movie> getMoviesOfGenre(String genreId) {
+    if (genreId == "all") return allMovies;
     List<Movie> qualifiedMovies = [];
-    for(Movie tempMovie in allMovies)
-    {
-      if(!qualifiedMovies.contains(tempMovie) && tempMovie.genres.contains(genreId))
-      {
+    for (Movie tempMovie in allMovies) {
+      if (!qualifiedMovies.contains(tempMovie) &&
+          tempMovie.genres.contains(genreId)) {
         qualifiedMovies.add(tempMovie);
       }
     }
@@ -61,13 +57,13 @@ class _CategoryBarState extends State<CategoryBar> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MovieFilter(
-                              stringToSearch: "thể loại " + genres[index].displayName,
-                              movies: getMoviesOfGenre(genres[index].id)
-                            )),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MovieFilter(
+                              stringToSearch:
+                                  "thể loại ${genres[index].displayName}",
+                              movies: getMoviesOfGenre(genres[index].id))),
+                    );
                   },
                   child: Container(
                     margin: const EdgeInsets.only(left: 16),

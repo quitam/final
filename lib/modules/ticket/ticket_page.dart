@@ -22,7 +22,7 @@ class _TicketPageState extends State<TicketPage> {
   String getQRCodeDataOfScreening(Screening screening) {
     String data = "";
     data += FirebaseAuth.instance.currentUser?.uid ?? "unknown";
-    data += "&" + screening.id + "&";
+    data += "&${screening.id}&";
     data += getQRSeatsData(screening);
     return data;
   }
@@ -40,10 +40,12 @@ class _TicketPageState extends State<TicketPage> {
     );
     for (Ticket tempTicket in selectedTickets) {
       if (tempTicket.screeningId == screening.id) {
-        data += tempTicket.seat + "_";
+        data += "${tempTicket.seat}_";
       }
     }
-    return (data.isNotEmpty) ? data.substring(0, data.length - 1) : "no_seats_avaiable";
+    return (data.isNotEmpty)
+        ? data.substring(0, data.length - 1)
+        : "no_seats_avaiable";
   }
 
   String getScreeningSeatsAsString(List<Ticket> tickets, Screening screening) {
@@ -59,10 +61,12 @@ class _TicketPageState extends State<TicketPage> {
     );
     for (Ticket tempTicket in selectedTickets) {
       if (tempTicket.screeningId == screening.id) {
-        seats += tempTicket.seat + ", ";
+        seats += "${tempTicket.seat}, ";
       }
     }
-    return (seats.isNotEmpty) ? seats.substring(0, seats.length - 1) : "không tìm thấy ghế";
+    return (seats.isNotEmpty)
+        ? seats.substring(0, seats.length - 1)
+        : "không tìm thấy ghế";
   }
 
   Theater? getTheaterOfScreening(Screening screening) {
@@ -111,23 +115,18 @@ class _TicketPageState extends State<TicketPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.darkerBackground,
-        elevation: 0,
-        title: const Text(
-          'My ticket',
-          style: AppTextStyles.heading28,
+        appBar: AppBar(
+          backgroundColor: AppColors.darkerBackground,
+          elevation: 0,
+          title: const Text(
+            'My ticket',
+            style: AppTextStyles.heading28,
+          ),
         ),
-      ),
-      body: StreamBuilder(
-        stream: getPlayingMovies(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && !snapshot.hasError) {
-            final ticket = snapshot.data!;
-            return Container(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              height: size.height,
-              child: ListView.builder(
+        body: Container(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            height: size.height,
+            child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: screenings.length,
                 itemBuilder: (context, index) {
@@ -200,10 +199,7 @@ class _TicketPageState extends State<TicketPage> {
                                             left: 8, bottom: 8),
                                         width: size.width,
                                         child: Text(
-                                            "Thời lượng: " +
-                                                screeningMovie.duration
-                                                    .toString() +
-                                                " phút",
+                                            "Thời lượng: ${screeningMovie.duration} phút",
                                             style: AppTextStyles.normal16
                                                 .copyWith(
                                                     color: AppColors.grey)),
@@ -223,7 +219,7 @@ class _TicketPageState extends State<TicketPage> {
                                           margin: const EdgeInsets.only(
                                               left: 8, bottom: 8),
                                           child: Text(
-                                            "at " + formattedTime,
+                                            "at $formattedTime",
                                             style: AppTextStyles.normal16
                                                 .copyWith(
                                                     color: AppColors.grey),
@@ -233,7 +229,7 @@ class _TicketPageState extends State<TicketPage> {
                                           margin: const EdgeInsets.only(
                                               left: 8, bottom: 8),
                                           child: Text(
-                                            "Ghế ngồi: " + seatString,
+                                            "Ghế ngồi: $seatString",
                                             style: AppTextStyles.normal16
                                                 .copyWith(
                                                     color: AppColors.grey),
@@ -243,7 +239,7 @@ class _TicketPageState extends State<TicketPage> {
                                             left: 8, bottom: 8),
                                         width: size.width,
                                         child: Text(
-                                          'Rạp: ' + theaterName,
+                                          'Rạp: $theaterName',
                                           style: AppTextStyles.heading18
                                               .copyWith(color: AppColors.green),
                                         ),

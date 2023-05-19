@@ -1,7 +1,6 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
-import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
@@ -9,7 +8,8 @@ import '../../models/models.dart';
 class MovieFilter extends StatefulWidget {
   final String stringToSearch;
   final List<Movie> movies;
-  const MovieFilter({super.key, required this.movies, required this.stringToSearch});
+  const MovieFilter(
+      {super.key, required this.movies, required this.stringToSearch});
   @override
   State<MovieFilter> createState() => _MovieFilterState();
 }
@@ -27,7 +27,7 @@ class _MovieFilterState extends State<MovieFilter> {
           backgroundColor: AppColors.darkerBackground,
           elevation: 0,
           title: Text(
-            'Kết quả tìm kiếm "' + widget.stringToSearch + '"',
+            'Kết quả tìm kiếm "${widget.stringToSearch}"',
             style: AppTextStyles.heading18,
           ),
         ),
@@ -101,7 +101,7 @@ class _MovieFilterState extends State<MovieFilter> {
                                   const EdgeInsets.only(left: 8, bottom: 8),
                               width: size.width,
                               child: Text(
-                                  'Tình trạng: ' + ((isMoviePlaying(widget.movies[index])) ? "đang chiếu" : "sắp chiếu"),
+                                  'Tình trạng: ${(isMoviePlaying(widget.movies[index])) ? "đang chiếu" : "sắp chiếu"}',
                                   style: AppTextStyles.normal16
                                       .copyWith(color: AppColors.grey)),
                             ),
