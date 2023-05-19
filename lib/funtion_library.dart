@@ -90,7 +90,6 @@ Future<List<Movie>> getAllMovie() async {
   List<Movie> movies = movieSnapshots.docs
       .map((e) => Movie.fromJson(e.data() as Map<String, dynamic>))
       .toList();
-
   return movies;
 }
 
@@ -142,6 +141,64 @@ Future<List<Screening>> getAllScreeningsOfMovie(String movieId) async {
     }
   }
   return screeningsOfMovie;
+}
+
+Future<List<Screening>> getUniqueScreeningsFromTickets(List<Ticket> tickets) async{
+  List<Screening> selectedScreenings = [];
+
+  CollectionReference screeningCollection =
+      FirebaseFirestore.instance.collection("Screening");
+  QuerySnapshot screeningQuerySnapshots = await screeningCollection.get();
+  List<Screening> screenings = screeningQuerySnapshots.docs
+      .map((e) => Screening.fromJson(e.data() as Map<String, dynamic>))
+      .toList();
+  for(Screening tempScreening in screenings)
+  {
+    if(!selectedScreenings.contains(tempScreening) && checkScreeningInTickets(tickets, tempScreening))
+    {
+      selectedScreenings.add(tempScreening);
+    } 
+  }
+  return selectedScreenings;
+}
+
+bool checkScreeningInTickets(List<Ticket> tickets, Screening screening)
+{
+  for(Ticket tempTicket in tickets)
+  {
+    if(tempTicket.screeningId == screening.id) return true;
+  }
+  return false;
+}
+
+Future<List<Movie>> getUniqueMoviesFromScreenings(List<Screening> screenings) async {
+  CollectionReference movieCollectionReference =
+      FirebaseFirestore.instance.collection("Movie");
+  QuerySnapshot movieSnapshots = await movieCollectionReference.get();
+  List<Movie> movies = movieSnapshots.docs
+      .map((e) => Movie.fromJson(e.data() as Map<String, dynamic>))
+      .toList();
+  List<Movie> selectedMovies = [];
+  for(Movie tempMovie in movies)
+  {
+    if(!selectedMovies.contains(tempMovie) && checkMovieInScreenings(screenings, tempMovie))
+    {
+      selectedMovies.add(tempMovie);
+    }
+  }
+  return selectedMovies;
+}
+
+bool checkMovieInScreenings(List<Screening> screenings, Movie movie)
+{
+  for(Screening tempScreeing in screenings)
+  {
+    if(tempScreeing.filmId == movie.id)
+    {
+      return true;
+    }
+  }
+  return false;
 }
 
 List<DateTime> getUniqueScreeningDates(List<Screening> screenings) {
@@ -204,6 +261,18 @@ Future<List<Ticket>> getAllTicketsOfScreening(String screeningId) async
   CollectionReference ticketCollection =
       FirebaseFirestore.instance.collection("Ticket");
   QuerySnapshot ticketQuery = await ticketCollection.where("screening", isEqualTo: screeningId).get();
+  tickets = ticketQuery.docs
+      .map((e) => Ticket.fromJson(e.data() as Map<String, dynamic>))
+      .toList();
+  return tickets;
+}
+
+Future<List<Ticket>> getUserTickets(String userId) async
+{
+  List<Ticket> tickets = [];
+  CollectionReference ticketCollection =
+      FirebaseFirestore.instance.collection("Ticket");
+  QuerySnapshot ticketQuery = await ticketCollection.where("user", isEqualTo: userId).get();
   tickets = ticketQuery.docs
       .map((e) => Ticket.fromJson(e.data() as Map<String, dynamic>))
       .toList();

@@ -34,7 +34,6 @@ class UpComing extends StatelessWidget {
                           builder: (context) => MovieDetailPage(
                             isPlaying: false,
                             movie: upcomingMovies[index],
-                            testMovie: movies[0],
                           ),
                         ));
                   },

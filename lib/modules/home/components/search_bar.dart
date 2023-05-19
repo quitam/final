@@ -4,6 +4,7 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
+import 'package:final_project/modules/movieFilter/movie_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -23,6 +24,16 @@ class _SearchBarState extends State<SearchBar> {
   List<String> movieNames = [];
   List<Movie> listMovies = [];
   List<Movie> resultSearch = [];
+
+  List<Movie> getMoviesWithNameContainSubstring(String substring) {
+    List<Movie> qualifiedMovies = [];
+    for (Movie tempMovie in listMovies) {
+      if (!qualifiedMovies.contains(tempMovie) && tempMovie.name.toLowerCase().contains(substring.toLowerCase())) {
+        qualifiedMovies.add(tempMovie);
+      }
+    }
+    return qualifiedMovies;
+  }
 
   @override
   void initState() {
@@ -71,7 +82,15 @@ class _SearchBarState extends State<SearchBar> {
                       .contains(textEditingValue.text.toLowerCase()));
                 },
                 onSelected: (String movieName) {
-                  print(movieName);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MovieFilter(
+                              stringToSearch: movieName,
+                              movies:
+                                  getMoviesWithNameContainSubstring(movieName),
+                            )),
+                  );
                 },
                 fieldViewBuilder: (BuildContext context,
                     TextEditingController textEditingController,
@@ -90,7 +109,15 @@ class _SearchBarState extends State<SearchBar> {
                       // Do something as the user types
                     },
                     onSubmitted: (String value) {
-                      onFieldSubmitted();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MovieFilter(
+                                  stringToSearch: value,
+                                  movies:
+                                      getMoviesWithNameContainSubstring(value),
+                                )),
+                      );
                     },
                   );
                 },
