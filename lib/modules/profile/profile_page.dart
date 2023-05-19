@@ -1,7 +1,10 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
+import 'package:final_project/constants/asset_path.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/loading_page.dart';
+import 'package:final_project/modules/profile/change_password_page.dart';
+import 'package:final_project/modules/profile/contact_page.dart';
 import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,8 @@ class ProfilePage extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final user = FirebaseAuth.instance.currentUser;
     final GoogleSignIn googleSignIn = GoogleSignIn();
+    String platform =
+        FirebaseAuth.instance.currentUser!.providerData[0].providerId;
 
     return Scaffold(
       body: Center(
@@ -29,9 +34,22 @@ class ProfilePage extends StatelessWidget {
                   radius: size.height / 15,
                   backgroundImage: NetworkImage(user!.photoURL.toString())),
             ),
-            Text(
-              user.displayName.toString(),
-              style: AppTextStyles.heading20,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (platform == 'google.com')
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Image.asset(
+                      AssetPath.googleButton,
+                      scale: 2,
+                    ),
+                  ),
+                Text(
+                  user.displayName.toString(),
+                  style: AppTextStyles.heading20,
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -42,26 +60,68 @@ class ProfilePage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                alignment: Alignment.centerLeft,
-                decoration: const BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: AppColors.white, width: 2))),
-                child: RichText(
-                    text: const TextSpan(
-                        style: AppTextStyles.heading18,
-                        children: [
-                      WidgetSpan(
-                          child: Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: FaIcon(
-                          FontAwesomeIcons.penToSquare,
-                          color: AppColors.blueMain,
+              child: GestureDetector(
+                onTap: () {
+                  if (platform == 'google.com') {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        backgroundColor: AppColors.darkGrey,
+                        title: Text(
+                          'Thông báo',
+                          style: AppTextStyles.heading20
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
-                      )),
-                      TextSpan(text: 'Cập nhật thông tin'),
-                    ])),
+                        content: const Text(
+                            'Bạn không thể đổi mật khẩu khi đăng nhập bằng Google',
+                            style: AppTextStyles.heading18),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (platform == 'password') {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ChangePasswordPage(email: user.email.toString()),
+                        ));
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  alignment: Alignment.centerLeft,
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          bottom:
+                              BorderSide(color: AppColors.white, width: 2))),
+                  child: RichText(
+                      text: TextSpan(
+                          style: AppTextStyles.heading18.copyWith(
+                              color: platform == 'password'
+                                  ? AppColors.white
+                                  : AppColors.grey),
+                          children: [
+                        WidgetSpan(
+                            child: Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FaIcon(
+                            FontAwesomeIcons.penToSquare,
+                            color: platform == 'password'
+                                ? AppColors.blueMain
+                                : AppColors.grey,
+                          ),
+                        )),
+                        const TextSpan(text: 'Đổi mật khẩu'),
+                      ])),
+                ),
               ),
             ),
             Padding(
@@ -98,7 +158,11 @@ class ProfilePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: GestureDetector(
                 onTap: () {
-                  toast('Gọi 0813 931 040');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ContactPage(),
+                      ));
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 14),

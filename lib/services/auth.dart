@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, avoid_print
 
 import 'package:final_project/widgets/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +7,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<bool> validateOldPassword(String email, String password) async {
+    var user = _auth.currentUser;
+    var authCredentials =
+        EmailAuthProvider.credential(email: email, password: password);
+    try {
+      var authResult =
+          await user?.reauthenticateWithCredential(authCredentials);
+      return authResult?.user != null;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<void> updatePassword(String password) async {
+    var user = _auth.currentUser;
+    await user?.updatePassword(password);
+  }
 
   Future<void> signInWithGoogle() async {
     GoogleSignInAccount? user = await _googleSignIn.signIn();

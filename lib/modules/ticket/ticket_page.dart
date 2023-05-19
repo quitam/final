@@ -13,6 +13,7 @@ class TicketPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.darkerBackground,
         elevation: 0,
+        centerTitle: true,
         title: const Text(
           'My ticket',
           style: AppTextStyles.heading28,
