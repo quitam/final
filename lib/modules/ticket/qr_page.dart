@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QRCode extends StatefulWidget {
-  @override
   final String qrData;
-
   const QRCode({super.key, required this.qrData});
+
+  @override
   State<QRCode> createState() => _QRCodeState();
 }
 

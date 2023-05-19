@@ -7,7 +7,6 @@ import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
 import 'package:final_project/modules/checkOut/check_out_page.dart';
 import 'package:final_project/widgets/toast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

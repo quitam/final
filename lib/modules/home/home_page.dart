@@ -7,6 +7,7 @@ import 'package:final_project/modules/home/components/header.dart';
 import 'package:final_project/modules/home/components/search_bar.dart';
 import 'package:final_project/modules/home/components/up_coming.dart';
 import 'package:final_project/modules/movieFilter/movie_filter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 typedef ShowMoreCallBack = void Function(BuildContext);
@@ -68,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    print(FirebaseAuth.instance.currentUser!.uid);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

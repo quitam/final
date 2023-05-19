@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
@@ -23,22 +25,21 @@ class CheckOutPage extends StatelessWidget {
       required this.screening,
       required this.seatsToCheckOut});
 
-  String getQRData()
-  {
+  String getQRData() {
     String data = "";
     data += FirebaseAuth.instance.currentUser?.uid ?? "";
-    data += "&" + screening.id + "&";
+    data += "&${screening.id}&";
     data += getSeatsQRData();
     return data;
   }
 
-  String getSeatsQRData()
-  {
+  String getSeatsQRData() {
     String data = "";
-    seatsToCheckOut.sort((a, b) => a.compareTo(b),);
-    for(String tempSeat in seatsToCheckOut)
-    {
-      data += tempSeat + "." ;
+    seatsToCheckOut.sort(
+      (a, b) => a.compareTo(b),
+    );
+    for (String tempSeat in seatsToCheckOut) {
+      data += "$tempSeat.";
     }
     return ((data.isNotEmpty) ? data.substring(0, data.length - 1) : "");
   }
@@ -49,10 +50,8 @@ class CheckOutPage extends StatelessWidget {
         DateFormat('EEEE, MMM d, yyyy').format(screening.startTime);
     String formattedTime = DateFormat('h:mm a').format(screening.startTime);
     String seatsAsString = "";
-    String price =
-        screening.price.toString() + " x" + seatsToCheckOut.length.toString();
-    String totalPrice =
-        (seatsToCheckOut.length * screening.price).toString() + " VND";
+    String price = "${screening.price} x${seatsToCheckOut.length}";
+    String totalPrice = "${seatsToCheckOut.length * screening.price} VND";
 
     for (String tempSeat in seatsToCheckOut) {
       seatsAsString = "$seatsAsString $tempSeat";
@@ -180,9 +179,9 @@ class CheckOutPage extends StatelessWidget {
                 // String qrData = getQRData();
                 if (FirebaseAuth.instance.currentUser != null) {
                   String? userId = FirebaseAuth.instance.currentUser?.uid;
-                  for(String tempSeat in seatsToCheckOut)
-                  {
-                    addNewTicketDocumentation("", screening.id, tempSeat, userId ?? "");
+                  for (String tempSeat in seatsToCheckOut) {
+                    addNewTicketDocumentation(
+                        "", screening.id, tempSeat, userId ?? "");
                   }
                   toast('Thanh toán thành công');
                   Navigator.of(context).pushAndRemoveUntil(

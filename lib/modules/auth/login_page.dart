@@ -3,6 +3,7 @@
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/constants/asset_path.dart';
+import 'package:final_project/modules/admin/admin_page.dart';
 import 'package:final_project/services/auth.dart';
 import 'package:final_project/modules/auth/components/border_button.dart';
 import 'package:final_project/modules/auth/components/logo.dart';
@@ -28,10 +29,16 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       loading = true;
     });
-    await Auth().signInWithEmailAndPassword(_username, _password);
-    if (FirebaseAuth.instance.currentUser != null) {
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+    if (_username == 'admin' && _password == 'admin') {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const AdminPage()),
+          (route) => false);
+    } else {
+      await Auth().signInWithEmailAndPassword(_username, _password);
+      if (FirebaseAuth.instance.currentUser != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+      }
     }
     setState(() {
       loading = false;

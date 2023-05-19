@@ -91,91 +91,94 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const FaIcon(FontAwesomeIcons.arrowLeft),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const FaIcon(FontAwesomeIcons.arrowLeft),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: SizedBox(
-                height: size.height * 0.05,
-                width: size.height * 0.05,
-                child: loading
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator())
-                    : null,
-              ),
-            ),
-            const Center(
-              child: Hero(
-                tag: 'signup',
-                child: Text(
-                  'Đăng ký',
-                  style: AppTextStyles.heading32Bold,
-                ),
-              ),
-            ),
-            if (pickedFile != null)
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Center(
-                child: GestureDetector(
-                  onTap: selectImage,
-                  child: CircleAvatar(
-                      radius: size.height / 20,
-                      backgroundImage: FileImage(File(pickedFile!.path!))),
+                child: SizedBox(
+                  height: size.height * 0.05,
+                  width: size.height * 0.05,
+                  child: loading
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: CircularProgressIndicator())
+                      : null,
                 ),
               ),
-            Center(
-              child: ElevatedButton(
-                  onPressed: selectImage,
-                  child:
-                      Text(pickedFile != null ? 'Đổi avatar' : 'Chọn avatar')),
-            ),
+              const Center(
+                child: Hero(
+                  tag: 'signup',
+                  child: Text(
+                    'Đăng ký',
+                    style: AppTextStyles.heading32Bold,
+                  ),
+                ),
+              ),
+              if (pickedFile != null)
+                Center(
+                  child: GestureDetector(
+                    onTap: selectImage,
+                    child: CircleAvatar(
+                        radius: size.height / 20,
+                        backgroundImage: FileImage(File(pickedFile!.path!))),
+                  ),
+                ),
+              Center(
+                child: ElevatedButton(
+                    onPressed: selectImage,
+                    child: Text(
+                        pickedFile != null ? 'Đổi avatar' : 'Chọn avatar')),
+              ),
 
-            //fullname
-            buildFullNameField(),
+              //fullname
+              buildFullNameField(),
 
-            //username
-            buildUsernameField(),
+              //username
+              buildUsernameField(),
 
-            //password
-            buildPasswordField(),
+              //password
+              buildPasswordField(),
 
-            //confirm password
-            buildConfirmPasswordField(),
+              //confirm password
+              buildConfirmPasswordField(),
 
-            //button login
-            Center(
-              child: BorderButton(
-                  size: size,
-                  onTap: () => handleSignup(),
-                  text: 'Đăng ký',
-                  backgroundColor: (_username != '' &&
-                          _password != '' &&
-                          _fullName != '' &&
-                          _confirmPassword != '')
-                      ? AppColors.blueMain
-                      : AppColors.darkBackground,
-                  borderColor: (_username != '' &&
-                          _password != '' &&
-                          _fullName != '' &&
-                          _confirmPassword != '')
-                      ? AppColors.blueMain
-                      : AppColors.darkBackground),
-            ),
-          ],
+              //button login
+              Center(
+                child: BorderButton(
+                    size: size,
+                    onTap: () => handleSignup(),
+                    text: 'Đăng ký',
+                    backgroundColor: (_username != '' &&
+                            _password != '' &&
+                            _fullName != '' &&
+                            _confirmPassword != '')
+                        ? AppColors.blueMain
+                        : AppColors.darkBackground,
+                    borderColor: (_username != '' &&
+                            _password != '' &&
+                            _fullName != '' &&
+                            _confirmPassword != '')
+                        ? AppColors.blueMain
+                        : AppColors.darkBackground),
+              ),
+            ],
+          ),
         ),
       ),
     );
