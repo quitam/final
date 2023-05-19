@@ -28,8 +28,10 @@ class HeaderWithSearchBox extends StatelessWidget {
                     bottomRight: Radius.circular(36))),
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               Text('Lập trình di động nâng cao',
-                  style: AppTextStyles.heading28
-                      .copyWith(fontSize: 24, fontWeight: FontWeight.bold)),
+                  style: AppTextStyles.heading28.copyWith(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.lightBlue)),
               const Padding(
                 padding: EdgeInsets.only(top: 8),
                 child: Text(

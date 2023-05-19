@@ -104,6 +104,17 @@ List<TestMovie> movies = [
       ])
 ];
 
+class Member {
+  final String studentId;
+  final String memberName;
+  Member({required this.studentId, required this.memberName});
+}
+
+List<Member> members = [
+  Member(studentId: '19110453', memberName: 'Phạm Qui Tâm'),
+  Member(studentId: '19110390', memberName: 'Đỗ Duy Long')
+];
+
 class Day {
   final int dd;
   final String day;
