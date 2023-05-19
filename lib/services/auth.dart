@@ -77,6 +77,8 @@ class Auth {
         toast('Tài khoản không tồn tại');
       } else if (e.code == 'wrong-password') {
         toast('Sai mật khẩu');
+      } else if (e.code == 'invalid-email') {
+        toast('Email không đúng định dạng');
       }
     }
   }
