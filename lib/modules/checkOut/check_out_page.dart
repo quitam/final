@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
@@ -5,6 +6,7 @@ import 'package:final_project/models/models.dart';
 import 'package:final_project/modules/home/bottom_nav.dart';
 import 'package:final_project/modules/movieDetail/movie_detail_page.dart';
 import 'package:final_project/widgets/toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -21,17 +23,38 @@ class CheckOutPage extends StatelessWidget {
       required this.screening,
       required this.seatsToCheckOut});
 
+  String getQRData()
+  {
+    String data = "";
+    data += FirebaseAuth.instance.currentUser?.uid ?? "";
+    data += "&" + screening.id + "&";
+    data += getSeatsQRData();
+    return data;
+  }
+
+  String getSeatsQRData()
+  {
+    String data = "";
+    seatsToCheckOut.sort((a, b) => a.compareTo(b),);
+    for(String tempSeat in seatsToCheckOut)
+    {
+      data += tempSeat + "." ;
+    }
+    return ((data.isNotEmpty) ? data.substring(0, data.length - 1) : "");
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate =
         DateFormat('EEEE, MMM d, yyyy').format(screening.startTime);
     String formattedTime = DateFormat('h:mm a').format(screening.startTime);
     String seatsAsString = "";
-    String price = screening.price.toString() + " x" + seatsToCheckOut.length.toString();
-    String totalPrice = (seatsToCheckOut.length * screening.price).toString() + " VND";
+    String price =
+        screening.price.toString() + " x" + seatsToCheckOut.length.toString();
+    String totalPrice =
+        (seatsToCheckOut.length * screening.price).toString() + " VND";
 
-    for(String tempSeat in seatsToCheckOut)
-    {
+    for (String tempSeat in seatsToCheckOut) {
       seatsAsString = "$seatsAsString $tempSeat";
     }
 
@@ -143,7 +166,7 @@ class CheckOutPage extends StatelessWidget {
                 buildPriceDetail('ID', '11012001'),
                 buildPriceDetail('Rạp', theater.name),
                 buildPriceDetail(
-                    'Ngày và giờ', '$formattedDate at $formattedTime'),
+                    'Ngày và giờ', '$formattedDate \nat $formattedTime'),
                 buildPriceDetail('Số ghế', seatsAsString),
                 buildPriceDetail('Giá', price),
               ],
@@ -154,12 +177,20 @@ class CheckOutPage extends StatelessWidget {
               child: Center(
             child: GestureDetector(
               onTap: () {
-                toast('Thanh toán thành công');
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const BottomNav(),
-                    ),
-                    (route) => false);
+                // String qrData = getQRData();
+                if (FirebaseAuth.instance.currentUser != null) {
+                  String? userId = FirebaseAuth.instance.currentUser?.uid;
+                  for(String tempSeat in seatsToCheckOut)
+                  {
+                    addNewTicketDocumentation("", screening.id, tempSeat, userId ?? "");
+                  }
+                  toast('Thanh toán thành công');
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const BottomNav(),
+                      ),
+                      (route) => false);
+                }
               },
               child: Container(
                 alignment: Alignment.center,
@@ -213,12 +244,32 @@ class CheckOutPage extends StatelessWidget {
             style: AppTextStyles.normal16,
           ),
           Text(
+            textAlign: TextAlign.right,
             detail,
             style: AppTextStyles.normal16,
             overflow: TextOverflow.clip,
+            maxLines: 2,
           )
         ],
       ),
     );
   }
+}
+
+bool addNewTicketDocumentation(
+    String id, String screeningId, String seat, String userId) {
+  DocumentReference ticketDoc =
+      FirebaseFirestore.instance.collection("Ticket").doc();
+  Map<String, dynamic> ticketData = {
+    'id': id,
+    'screening': screeningId,
+    'seat': seat,
+    'user': userId,
+  };
+  bool result = true;
+  ticketDoc.set(ticketData).then((value) {}).catchError((error) {
+    result = false;
+    print("Khong the them document cho ticket voi loi: $error");
+  });
+  return result;
 }

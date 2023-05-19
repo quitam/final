@@ -17,6 +17,7 @@ class Movie {
   List<String> genres;
   String synopsis;
   String trailer;
+  DateTime releaseDate;
 
   Movie({
     required this.id,
@@ -26,7 +27,8 @@ class Movie {
     required this.duration,
     required this.genres,
     required this.synopsis, 
-    required this.trailer
+    required this.trailer,
+    required this.releaseDate
   });
 
   static Movie fromJson(Map<String, dynamic> json) => Movie(
@@ -37,7 +39,8 @@ class Movie {
         duration: json["duration"],
         genres: List<String>.from(json["genres"]),
         synopsis: json["synopsis"],
-        trailer: json["trailer"]
+        trailer: json["trailer"],
+        releaseDate: json["release_date"].toDate()
         // releaseDate:
         //     DateTime.fromMillisecondsSinceEpoch(json['release_date'] * 1000)
         //genres: json["genres"].toList().map((dynamic element) => element.toString()).toList(),
@@ -152,13 +155,13 @@ class Ticket
     required this.id,
     required this.screeningId,
     required this.userId,
-    required this.seat
+    required this.seat,
   });
 
   static Ticket fromJson(Map<String, dynamic> json) => Ticket(
     id: json["id"],
     screeningId: json["screening"],
     userId: json["user"],
-    seat: json["seat"]
+    seat: json["seat"], 
   );
 }

@@ -29,10 +29,10 @@ class _BottomNavState extends State<BottomNav> {
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppColors.darkBackground,
           selectedItemColor: AppColors.blueMain,
-          selectedLabelStyle: AppTextStyles.heading18.copyWith(fontSize: 16),
+          selectedLabelStyle: AppTextStyles.heading18.copyWith(fontSize: 12),
           showUnselectedLabels: false,
           unselectedItemColor: AppColors.grey,
-          iconSize: 32,
+          iconSize: 24,
           currentIndex: currentIndex,
           onTap: (index) => setState(() {
                 currentIndex = index;

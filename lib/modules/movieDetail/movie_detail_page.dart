@@ -2,7 +2,6 @@ import 'package:final_project/config/themes/app_colors.dart';
 import 'package:final_project/config/themes/app_text_styles.dart';
 import 'package:final_project/funtion_library.dart';
 import 'package:final_project/models/models.dart';
-import 'package:final_project/models/test_models.dart';
 import 'package:final_project/modules/movieDetail/components/fa_button.dart';
 import 'package:final_project/modules/movieDetail/components/background_widget.dart';
 import 'package:final_project/modules/movieDetail/components/cast_bar.dart';
@@ -12,11 +11,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final bool isPlaying;
-  final TestMovie testMovie;
   final Movie movie;
   const MovieDetailPage({
     super.key,
-    required this.testMovie,
     required this.movie,
     required this.isPlaying,
   });
@@ -97,7 +94,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                                 margin:
                                     const EdgeInsets.only(left: 8, bottom: 8),
                                 child: Row(
-                                  children: const [Text('5000 votes')],
+                                  children: const [Text('Votes: unknown')],
                                 )),
                             Container(
                               padding:
