@@ -105,7 +105,7 @@ class _AddMovieState extends State<AddMovie> {
       'duration': int.parse(_duration),
       'synopsis': _synopsis,
       'trailer': _trailer,
-      'genres': dropdownvalue,
+      'genres': [dropdownvalue],
       'banner_image': pathBanner,
       'poster_image': pathPoster,
       'release_date': Timestamp.fromDate(DateTime.parse(_dateController.text))
