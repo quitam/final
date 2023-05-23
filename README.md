@@ -7,7 +7,7 @@ Techlogies:
 
 Main function:
 - Login, Register, Change password
-- Movie detail, book tickets, check out
+- Movie detail, book tickets, comment movie, check out
 - Search movie, get movie by genre
 
 Account:
