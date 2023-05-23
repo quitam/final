@@ -1,11 +1,16 @@
 Movie book tickets app
 
 Techlogies:
-- Frontend: Flutter
+- Flutter
 - Database, Auth: Firebase
 
 
 Main function:
-- Login, Register
+- Login, Register, Change password
 - Movie detail, book tickets, check out
 - Search movie, get movie by genre
+
+Account:
+- admin               pass: admin
+- quitam@gmail.com    pass: 111111
+- Google Auth to login
